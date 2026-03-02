@@ -10,10 +10,10 @@ spring:
     username: mujakjung
     password: 1234
 
-jpa:
-  hibernate:
-    ddl-auto: update
-  show-sql: true
-  properties:
+  jpa:
     hibernate:
-      format_sql: true
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
