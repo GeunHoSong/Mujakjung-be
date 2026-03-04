@@ -12,6 +12,10 @@ public class MemberService {
     private final MemberRepository repository;
 
     public void save(String email, String password){
+        // 이메일 중복 검사
+        if(repository.existsByEmail(email)){
+            throw new RuntimeException("이미 존재 하는 이메일 입니다");
+        }
         MemberEntity entity = new MemberEntity();
         entity.setEmail(email);
         entity.setPassword(password);
