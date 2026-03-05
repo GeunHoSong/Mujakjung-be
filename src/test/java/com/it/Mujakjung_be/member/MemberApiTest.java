@@ -1,6 +1,7 @@
 
 package com.it.Mujakjung_be.member;
 
+import com.it.Mujakjung_be.gobal.memeber.dto.JoinRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,9 +12,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import tools.jackson.databind.ObjectMapper;
 
+import static aQute.bnd.annotation.headers.Category.json;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 /*
  SpringBootTest = 애플리케이션을 "통째로" 띄우는 통합 테스트
@@ -28,31 +32,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  AutoConfigureMockMvc = MockMvc를 스프링이 자동으로 만들어서 빈으로 등록해줌
  - 그래서 아래 @Autowired MockMvc가 가능해짐
 */
+
 @AutoConfigureMockMvc
 class MemberApiTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper om;
+
 
     @Test
     void joinTest() throws Exception {
-
-        // 컨트롤러로 보낼 JSON 바디
-        String json = """
-        {
-          "email": "test@test.com",
-          "password": "test1234!",
-          "name": "name"
-        }
-        """;
-
-        // MockMvc로 "가짜 HTTP 요청" 보내기
-        mockMvc.perform(
-                        post("/api/member/join")
-                                .contentType(MediaType.APPLICATION_JSON) // Content-Type: application/json
-                                .content(json)                            // Body: 위 JSON
+        JoinRequest request = new JoinRequest();
+        request.setEmail("test@test.com");
+        request.setPassword("test9876!");
+        request.setName("하수정");
+        mockMvc.perform(post("/api/member/join")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                                .content(om.writeValueAsString(request))
                 )
-                // 응답이 200 OK인지 검증
                 .andExpect(status().isOk());
     }
+
 }

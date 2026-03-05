@@ -16,10 +16,10 @@ public class MemberController {
     private final MemberService service;
 
     @PostMapping("/join")
-    public String join(@RequestBody JoinRequest request){
+    public ResponseEntity<String> join(@RequestBody JoinRequest request){
         service.save(request);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("ok");
     }
 
 
