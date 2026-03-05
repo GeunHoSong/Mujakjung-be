@@ -17,7 +17,10 @@ public class MemberService {
 
     public void save(JoinRequest request){
         // 이메일 중복
-        repository.findByEmail(request.getEmail()).ifPresent(m-> {throw new IllegalArgumentException("이미 가입된 이메일입니다."); });
+        if (repository.existsByEmail(request.getEmail())){
+            throw new IllegalArgumentException("이미 가입된 이메일 입니다");
+        }
+
         MemberEntity member = new MemberEntity();
         member.setEmail(request.getEmail());
         member.setPassword(encoder.encode(request.getPassword()));

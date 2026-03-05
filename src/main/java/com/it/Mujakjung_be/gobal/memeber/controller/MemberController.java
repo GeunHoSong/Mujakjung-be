@@ -17,9 +17,15 @@ public class MemberController {
 
     @PostMapping("/join")
     public ResponseEntity<String> join(@RequestBody JoinRequest request){
-        service.save(request);
+        try {
+            service.save(request);
+            return ResponseEntity.ok("ok");
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(e.getMessage()); // 400
+        }
 
-        return ResponseEntity.ok("ok");
+
+
     }
 
 
