@@ -1,6 +1,7 @@
 package com.it.Mujakjung_be.gobal.memeber.service;
 
 import com.it.Mujakjung_be.gobal.memeber.dto.JoinRequest;
+import com.it.Mujakjung_be.gobal.memeber.dto.LoginRequest;
 import com.it.Mujakjung_be.gobal.memeber.entity.MemberEntity;
 import com.it.Mujakjung_be.gobal.memeber.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,15 @@ public class MemberService {
         repository.save(member);
     }
 
+    //
+    public void login(LoginRequest request){
+        // 이메일 있는지 없느지 검증
+        MemberEntity en = repository.findByEmail(request.getEmail()).orElseThrow(() -> new IllegalArgumentException("이메일이 없습니다"));
+        // 로그인 비밀 번호 검증
+        if (!encoder.matches(request.getPassword(), en.getPassword())){
+            throw new IllegalArgumentException("비밀 번호 가 틀렸습니다");
+        }
 
-
+    }
 
 }

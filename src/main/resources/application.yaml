@@ -54,3 +54,6 @@ spring:
       hibernate:
         # SQL을 보기 좋게 줄바꿈/정렬해서 출력
         format_sql: true
+  jwt:
+    secret: your-secret-key-your-secret-key-your-secret-key
+    expiration: 3600000
