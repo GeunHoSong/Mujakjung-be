@@ -34,6 +34,9 @@ public class MemberEntity {
     //  NOT NULL + VARCHAR(30)
     private String name;
 
+    @Column(length = 100)
+    private Address address; // 주소
+
     /**
      * JPA 기본 생성자 (필수)
      * - JPA가 리플렉션으로 객체 생성할 때 사용

@@ -17,4 +17,9 @@ public class JoinRequest {
     @NotBlank
     private String name;
 
+    // 추가
+    private String zipcode;
+    private String city;
+    private String street;
+
 }
