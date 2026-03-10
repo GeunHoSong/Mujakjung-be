@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
-@CrossOrigin(origins = "http://lcalhost:5173")
+@CrossOrigin(origins = {"*"})
 public class MemberController {
 
     private final MemberService service;
