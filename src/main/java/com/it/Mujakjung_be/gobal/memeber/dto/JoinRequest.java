@@ -14,8 +14,13 @@ public class JoinRequest {
     // 비밀 번호 방지
     @NotBlank(message = "비밀 번호 필수 입니다")
     private String password;
+    @NotBlank(message = "2차 비밀 번호를 입력을 하세요")
+    private String ConfirmPassword;
     @NotBlank
     private String name;
+    private String phone;
+    private String gender;
+
 
     // 추가
     private String zipcode;

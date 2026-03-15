@@ -34,6 +34,10 @@ public class MemberEntity {
     //  NOT NULL + VARCHAR(30)
     private String name;
 
+    private String phone;
+
+    private String gender;
+
     @Column(length = 100)
     private Address address; // 주소
 

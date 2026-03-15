@@ -29,6 +29,8 @@ public class MemberService {
         member.setEmail(request.getEmail());
         member.setPassword(encoder.encode(request.getPassword()));
         member.setName(request.getName());
+        member.setPhone(request.getPhone());
+        member.setGender(request.getGender());
 
         repository.save(member);
     }
