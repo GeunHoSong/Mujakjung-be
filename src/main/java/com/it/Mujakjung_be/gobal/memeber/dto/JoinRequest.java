@@ -22,6 +22,7 @@ public class JoinRequest {
     private String gender;
 
 
+
     // 추가
     private String zipcode;
     private String city;
