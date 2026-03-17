@@ -3,10 +3,13 @@ package com.it.Mujakjung_be.gobal.memeber.controller;
 import com.it.Mujakjung_be.gobal.memeber.dto.JoinRequest;
 import com.it.Mujakjung_be.gobal.memeber.dto.LoginRequest;
 import com.it.Mujakjung_be.gobal.memeber.dto.LoginResponse;
+import com.it.Mujakjung_be.gobal.memeber.dto.MyPageResponse;
 import com.it.Mujakjung_be.gobal.memeber.repository.MemberRepository;
 import com.it.Mujakjung_be.gobal.memeber.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +46,11 @@ public class MemberController {
     public String test(){
         return "테스트 성공";
     }
-
+    @PostMapping("/mypage")
+    public ResponseEntity<MyPageResponse> mypage(Authentication authentication){
+        String email= authentication.getName();
+        return ResponseEntity.ok(service.getMyPage(email));
+    }
 
 
 

@@ -3,6 +3,7 @@ package com.it.Mujakjung_be.gobal.memeber.service;
 import com.it.Mujakjung_be.gobal.memeber.dto.JoinRequest;
 import com.it.Mujakjung_be.gobal.memeber.dto.LoginRequest;
 import com.it.Mujakjung_be.gobal.memeber.dto.LoginResponse;
+import com.it.Mujakjung_be.gobal.memeber.dto.MyPageResponse;
 import com.it.Mujakjung_be.gobal.memeber.entity.MemberEntity;
 import com.it.Mujakjung_be.gobal.memeber.entity.Role;
 import com.it.Mujakjung_be.gobal.memeber.repository.MemberRepository;
@@ -19,7 +20,7 @@ public class MemberService {
     private final PasswordEncoder encoder;
     private final JwtUtil jwtUtil;
 
-
+    // 회원 가입
     public void save(JoinRequest request){
         // 이메일 중복
         if (repository.existsByEmail(request.getEmail())){
@@ -38,7 +39,7 @@ public class MemberService {
         repository.save(member);
     }
 
-    //
+    //로그인
     public LoginResponse login(LoginRequest request){
         // 이메일 있는지 없느지 검증
         MemberEntity en = repository.findByEmail(request.getEmail()).orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀 번호가 없습니다 "));
@@ -49,6 +50,19 @@ public class MemberService {
         // JWT 생성
         String token = jwtUtil.createToken(en.getEmail());
         return new LoginResponse(token);
+    }
+    // 마이 페이지
+    public MyPageResponse getMyPage(String email) {
+
+        MemberEntity e = repository.findByEmail(email).orElseThrow(()-> new IllegalArgumentException("회원 정보를 찾을 수 없습니다"));
+        MyPageResponse response = new MyPageResponse();
+        response.setEmail(e.getEmail());
+        response.setName(e.getName());
+        response.setPhone(e.getPhone());
+        response.setGender(e.getGender());
+        response.setAddress(e.getAddress());
+        response.setRole(e.getRole().name());
+        return response;
     }
 
 }
