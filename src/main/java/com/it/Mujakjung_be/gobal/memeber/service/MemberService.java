@@ -4,6 +4,7 @@ import com.it.Mujakjung_be.gobal.memeber.dto.JoinRequest;
 import com.it.Mujakjung_be.gobal.memeber.dto.LoginRequest;
 import com.it.Mujakjung_be.gobal.memeber.dto.LoginResponse;
 import com.it.Mujakjung_be.gobal.memeber.entity.MemberEntity;
+import com.it.Mujakjung_be.gobal.memeber.entity.Role;
 import com.it.Mujakjung_be.gobal.memeber.repository.MemberRepository;
 import com.it.Mujakjung_be.gobal.memeber.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,8 @@ public class MemberService {
         member.setName(request.getName());
         member.setPhone(request.getPhone());
         member.setGender(request.getGender());
+        member.setRole(Role.USER);
+
 
         repository.save(member);
     }
