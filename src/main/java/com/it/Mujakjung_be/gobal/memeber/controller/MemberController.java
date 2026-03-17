@@ -34,24 +34,38 @@ public class MemberController {
         return ResponseEntity.ok("회원 가입 성공");
     }
 
+    // 로그인 API
+// 클라이언트(React)가 이메일과 비밀번호를 보내면
+// 로그인 처리 후 JWT 토큰을 반환하는 API
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
 
+        // Service 계층에서 로그인 로직 실행
+        // 이메일 존재 확인 + 비밀번호 검증 + JWT 생성
         LoginResponse response = service.login(request);
 
+        // 로그인 성공 시 토큰을 JSON 형태로 반환
         return ResponseEntity.ok(response);
     }
 
+    // 서버 정상 작동 확인용 테스트 API
+// 브라우저에서 호출하면 단순 문자열 반환
     @GetMapping("/test")
     public String test(){
         return "테스트 성공";
     }
+    // 로그인한 사용자의 정보를 조회하는 API
     @PostMapping("/mypage")
-    public ResponseEntity<MyPageResponse> mypage(Authentication authentication){
-        String email= authentication.getName();
+    public ResponseEntity<MyPageResponse> mypage(Authentication authentication) {
+
+        // Spring Security에서 현재 로그인한 사용자 정보를 가져옴
+        // JWT 필터가 인증 객체를 SecurityContext에 저장했기 때문에 사용 가능
+        String email = authentication.getName();
+
+        // 이메일을 기준으로 회원 정보를 조회
+        // Service에서 DB 조회 후 DTO로 변환
         return ResponseEntity.ok(service.getMyPage(email));
+
+
     }
-
-
-
 }
