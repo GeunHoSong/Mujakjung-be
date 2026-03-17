@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.catalina.User;
+
+import java.lang.reflect.Member;
 
 /**
  * 회원 정보를 저장하는 JPA 엔티티 클래스
@@ -40,6 +43,21 @@ public class MemberEntity {
 
     @Column(length = 100)
     private Address address; // 주소
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+    public MemberEntity (String email, String password, String name, String phone, String gender, Address address, Role role ){
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.gender= gender;
+        this.address = address;
+        this.role = role;
+    }
+
+
 
     /**
      * JPA 기본 생성자 (필수)
