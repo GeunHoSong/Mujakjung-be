@@ -42,7 +42,7 @@ public class SecurityConfig {
 
                 /* URL 별 접근 권한 설정 */
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/member/join", "/api/member/login").permitAll()
+                        .requestMatchers("/api/member/join", "/api/member/login").permitAll().requestMatchers("/admin/**").hasAnyRole("ADMIN").requestMatchers("/member/**").hasAnyRole("USER", "ADMIN")
 
                         /* 나머지는 인증 필요 */
                         .anyRequest().authenticated()
