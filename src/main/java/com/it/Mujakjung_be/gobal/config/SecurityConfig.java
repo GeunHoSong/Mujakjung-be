@@ -56,7 +56,7 @@ public class SecurityConfig {
 
                 // 에러 핸들러
                 .exceptionHandling(ex -> ex .authenticationEntryPoint((request, response, authException) -> {
-                    response.setStatus(400);
+                    response.setStatus(401);
                     response.setContentType("application/json;charset=UTF-8");
                     response.getWriter().write("{\"message\":\"권한이 필요 합니다\", \"status\": 401 }");
 

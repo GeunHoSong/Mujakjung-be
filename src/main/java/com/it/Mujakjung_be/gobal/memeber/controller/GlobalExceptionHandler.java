@@ -33,6 +33,7 @@ public class GlobalExceptionHandler {
     // 4. 모든 예외 (최종 방어)
     // 예상 못한 서버 예외 처리
     @ExceptionHandler(Exception.class)
+
     public ResponseEntity<ErrorResponse> handleAll(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("서버 에러" , 500));
     }
