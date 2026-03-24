@@ -52,8 +52,24 @@ public class SecurityConfig {
                 .formLogin(form-> form.disable())
                 /*http Basic  인증 비 활성화 */
                 .httpBasic(basic -> basic.disable())
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+
+                // 에러 핸들러
+                .exceptionHandling(ex -> ex .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(400);
+                    response.setContentType("application/json;charset=UTF-8");
+                    response.getWriter().write("{\"message\":\"권한이 필요 합니다\", \"status\": 401 }");
+
+                })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(403);
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.getWriter().write("{\"message\": \"권한이 필요 합니다\", \"status\": 403}");
+
+                        })
+                );
 
                 return http.build();
     }
+
 }
