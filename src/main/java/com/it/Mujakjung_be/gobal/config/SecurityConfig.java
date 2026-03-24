@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex .authenticationEntryPoint((request, response, authException) -> {
                     response.setStatus(401);
                     response.setContentType("application/json;charset=UTF-8");
-                    response.getWriter().write("{\"message\":\"권한이 필요 합니다\", \"status\": 401 }");
+                    response.getWriter().write("{\"message\":\"인증이 필요합니다\", \"status\": 401}");
 
                 })
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
