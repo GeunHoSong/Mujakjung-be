@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -17,9 +19,12 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final UserDetailsService service;
 
-    public JwtFilter(JwtUtil jwtUtil){
+    public JwtFilter(JwtUtil jwtUtil, UserDetailsService service){
         this.jwtUtil= jwtUtil;
+        this.service = service;
+
     }
 
 
@@ -43,12 +48,15 @@ public class JwtFilter extends OncePerRequestFilter {
             // 토큰에서 이메일 추출
             String email = jwtUtil.getEmail(token);
 
+            UserDetails userDetails = service.loadUserByUsername(email);
+
+
             // 인증 객체 생성
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             email,
                             null,
-                            AuthorityUtils.NO_AUTHORITIES
+                            userDetails.getAuthorities()
                     );
 
             // SecurityContext 에 인증 저장
