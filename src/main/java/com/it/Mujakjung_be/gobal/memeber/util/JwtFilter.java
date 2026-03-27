@@ -54,7 +54,7 @@ public class JwtFilter extends OncePerRequestFilter {
             // 인증 객체 생성
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
-                            email,
+                            userDetails,
                             null,
                             userDetails.getAuthorities()
                     );
