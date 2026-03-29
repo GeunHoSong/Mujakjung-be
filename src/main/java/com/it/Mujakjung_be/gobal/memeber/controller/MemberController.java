@@ -5,76 +5,86 @@ import com.it.Mujakjung_be.gobal.memeber.repository.MemberRepository;
 import com.it.Mujakjung_be.gobal.memeber.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
-@RestController
-@RequiredArgsConstructor
-@RequestMapping("/api/member")
-@CrossOrigin(origins = {"*"})
+@Slf4j // 로그 기록을 위한 어노테이션
+@RestController // JSON 형태로 데이터를 주고받는 API 컨트롤러
+@RequiredArgsConstructor // final 필드(service) 자동 주입
+@RequestMapping("/api/member") // 공통 주소 설정
+@CrossOrigin(origins = {"*"}) // 모든 도메인에서의 요청 허용 (CORS 에러 방지)
 public class MemberController {
-    // Service 계층 호출
-    // 회원 관련 비즈니스 로직 처리
-    private final MemberService service;
 
+    private final MemberService service; // 비즈니스 로직을 담당하는 서비스 호출
+
+    /**
+     * 회원가입 API
+     * POST /api/member/join
+     */
     @PostMapping("/join")
     public ResponseEntity<String> join(@RequestBody JoinRequest request){
-        // @RequestBody
-        // 클라이언트가 보낸 JSON 데이터를
-        // JoinRequest 객체로 변환
+        // @RequestBody: 클라이언트가 보낸 JSON 데이터를 객체로 변환
+        log.info("회원가입 요청: {}", request.getEmail());
 
-        // 회원가입 로직 실행
-        service.save(request);
-        // 성공 응답 반환
+        service.save(request); // 회원가입 로직 실행
         return ResponseEntity.ok("회원 가입 성공");
     }
 
-    // 로그인 API
-// 클라이언트(React)가 이메일과 비밀번호를 보내면
-// 로그인 처리 후 JWT 토큰을 반환하는 API
+    /**
+     * 로그인 API
+     * POST /api/member/login
+     * 성공 시 JWT 토큰이 담긴 LoginResponse 반환
+     */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
+        log.info("로그인 요청: {}", request.getEmail());
 
-        // Service 계층에서 로그인 로직 실행
-        // 이메일 존재 확인 + 비밀번호 검증 + JWT 생성
+        // 이메일 확인 + 비번 검증 + JWT 생성 로직 실행
         LoginResponse response = service.login(request);
 
-        // 로그인 성공 시 토큰을 JSON 형태로 반환
         return ResponseEntity.ok(response);
     }
 
-    // 서버 정상 작동 확인용 테스트 API
-// 브라우저에서 호출하면 단순 문자열 반환
+    /**
+     * 서버 정상 작동 테스트용
+     * GET /api/member/test
+     */
     @GetMapping("/test")
     public String test(){
         return "테스트 성공";
     }
-    // 로그인한 사용자의 정보를 조회하는 API
+
+    /**
+     * 마이페이지 정보 조회 API
+     * POST /api/member/mypage
+     * Authentication: 시큐리티가 검증한 현재 로그인 유저 정보가 담겨 있음
+     */
     @PostMapping("/mypage")
     public ResponseEntity<MyPageResponse> mypage(Authentication authentication) {
-
-        // Spring Security에서 현재 로그인한 사용자 정보를 가져옴
-        // JWT 필터가 인증 객체를 SecurityContext에 저장했기 때문에 사용 가능
+        // JWT 필터를 통해 저장된 인증 객체에서 이메일(아이디) 추출
         String email = authentication.getName();
 
-        // 이메일을 기준으로 회원 정보를 조회
-        // Service에서 DB 조회 후 DTO로 변환
+        // 서비스에서 해당 이메일의 회원 정보를 가져와서 반환
         return ResponseEntity.ok(service.getMyPage(email));
-
     }
-    // 프로필 업데이트 (닉네임, 사진, 자기소개 등)
-    // PATCH는 리소스를 부분적으로 수정할 때 사용해!
-    @PostMapping("/proflie")
-    public ResponseEntity<String> updateProfile(Authentication authentication, @RequestBody ProfileRequest request ){
-        String email = authentication.getName();
-        log.info("프로필 업데이트 요청: {}", email);
 
+    /**
+     * 프로필 업데이트 API (닉네임, 사진, 자기소개 등)
+     * POST /api/member/proflie
+     */
+    @PostMapping("/proflie")
+    public ResponseEntity<String> updateProfile(
+            Authentication authentication,
+            @RequestBody ProfileRequest request
+    ){
+        // 로그인된 사용자 이메일 가져오기
+        String email = authentication.getName();
+        log.info("프로필 업데이트 요청 계정: {}", email);
+
+        // 프로필 수정 로직 실행
         service.updateProfile(email, request);
         return ResponseEntity.ok("프로필 성공적으로 업데이트 되었습니다");
     }
-
 }

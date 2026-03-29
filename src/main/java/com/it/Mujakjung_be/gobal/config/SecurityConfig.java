@@ -17,59 +17,68 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtFilter jwtFilter;
-    // 비밀 번호 암호 화
+
+    private final JwtFilter jwtFilter; // 우리가 만든 JWT 필터 주입
+
+    /**
+     * 비밀번호 암호화 빈(Bean) 등록
+     * BCrypt 해시 함수를 사용해서 비밀번호를 안전하게 암호화함
+     */
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * 시큐리티의 핵심 설정 (필터 체인)
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        /**
-         * CSRF 보호 기능 비활성화
-         *
-         * - 기본적으로 Spring Security는 CSRF 보호 기능이 켜져 있음
-         * - REST API 서버에서는 보통 사용하지 않기 때문에 꺼줌
-         * - 안 끄면 POST 요청이 403으로 막히는 경우 많음
-         */
+
+        // 1. CSRF 보안 비활성화 (REST API는 보통 세션을 안 써서 꺼둠)
         http.csrf(csrf -> csrf.disable())
 
-                /* 세션을 사용하지 않음 (JWT 방식) */
+                // 2. 세션 정책 설정: 세션을 만들지도 않고 사용하지도 않음 (JWT 방식의 핵심!)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                /* URL 별 접근 권한 설정 */
+                // 3. URL별 접근 권한 제어
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/member/join", "/api/member/login").permitAll().requestMatchers("/api/admin/**").hasAnyRole("ADMIN").requestMatchers("/api/member/**").hasAnyRole("USER", "ADMIN")
-
-                        /* 나머지는 인증 필요 */
+                        // 회원가입과 로그인은 아무나 접근 가능(permitAll)
+                        .requestMatchers("/api/member/join", "/api/member/login").permitAll()
+                        // /api/admin/으로 시작하는 건 ADMIN 권한만 가능
+                        .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
+                        // /api/member/로 시작하는 건 USER나 ADMIN 권한이 있어야 함
+                        .requestMatchers("/api/member/**").hasAnyRole("USER", "ADMIN")
+                        // 그 외의 모든 요청은 반드시 인증(로그인)을 해야 함
                         .anyRequest().authenticated()
-
                 )
-                /*기본 로그인 페이지 비활성화*/
-                .formLogin(form-> form.disable())
-                /*http Basic  인증 비 활성화 */
-                .httpBasic(basic -> basic.disable())
+
+                // 4. 불필요한 기본 기능 끄기
+                .formLogin(form -> form.disable()) // 기본 로그인 폼 안 씀
+                .httpBasic(basic -> basic.disable()) // 기본 HTTP 인증 방식 안 씀
+
+                // 5. JWT 필터 위치 설정
+                // UsernamePasswordAuthenticationFilter(기본 로그인 필터)보다 먼저 내 필터를 실행해라!
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
-                // 에러 핸들러
-                .exceptionHandling(ex -> ex .authenticationEntryPoint((request, response, authException) -> {
-                    response.setStatus(401);
-                    response.setContentType("application/json;charset=UTF-8");
-                    response.getWriter().write("{\"message\":\"인증이 필요합니다\", \"status\": 401}");
-
-                })
+                // 6. 에러 처리 (로그인 실패나 권한 부족 시 응답 설정)
+                .exceptionHandling(ex -> ex
+                        // 인증 실패 시 (401 에러)
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(401);
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.getWriter().write("{\"message\":\"인증이 필요합니다\", \"status\": 401}");
+                        })
+                        // 권한 부족 시 (403 에러)
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
                             response.setStatus(403);
                             response.setContentType("application/json;charset=UTF-8");
                             response.getWriter().write("{\"message\": \"권한이 필요 합니다\", \"status\": 403}");
-
                         })
                 );
 
-                return http.build();
+        return http.build();
     }
-
 }
