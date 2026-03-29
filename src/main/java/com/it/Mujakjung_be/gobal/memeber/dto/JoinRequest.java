@@ -20,10 +20,11 @@ public class JoinRequest {
     private String name;
     private String phone;
     private String gender;
-
-
-
-    // 추가
+    // 프로필 관련 추가 정보
+    private String nickname; // 서비스에서 사용할 방법
+    private String profileTmgUrl; // 프로필 이미지 경로 (기본값 설정 가능)
+    private String bio; // 한줄 소개
+    // 카카오 주소  api 정보
     private String zipcode;
     private String city;
     private String street;
