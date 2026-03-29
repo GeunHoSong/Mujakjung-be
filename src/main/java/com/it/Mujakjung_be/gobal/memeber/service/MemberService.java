@@ -1,9 +1,6 @@
 package com.it.Mujakjung_be.gobal.memeber.service;
 
-import com.it.Mujakjung_be.gobal.memeber.dto.JoinRequest;
-import com.it.Mujakjung_be.gobal.memeber.dto.LoginRequest;
-import com.it.Mujakjung_be.gobal.memeber.dto.LoginResponse;
-import com.it.Mujakjung_be.gobal.memeber.dto.MyPageResponse;
+import com.it.Mujakjung_be.gobal.memeber.dto.*;
 import com.it.Mujakjung_be.gobal.memeber.entity.MemberEntity;
 import com.it.Mujakjung_be.gobal.memeber.entity.Role;
 import com.it.Mujakjung_be.gobal.memeber.repository.MemberRepository;
@@ -11,6 +8,9 @@ import com.it.Mujakjung_be.gobal.memeber.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.lang.reflect.Member;
 
 @Service
 @RequiredArgsConstructor // final 필드 생성자 자동 생성 , 의존성 주입
@@ -63,6 +63,15 @@ public class MemberService {
         response.setAddress(e.getAddress());
         response.setRole(e.getRole().name());
         return response;
+    }
+
+    // 프로필 업데이트 : 가입후 별도 수행
+    @Transactional
+    public void updateProfile(String email, ProfileRequest request){
+        MemberEntity member = repository.findByEmail(email).orElseThrow(()-> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+        if (request.getNickname() != null) member.setNickname(request.getNickname());
+        if (request.getBio() != null) member.setBio(request.getBio());
+        if (request.getProfileTmgUrl()!=null) member.setProfileTmg(request.getProfileTmgUrl());
     }
 
 }
