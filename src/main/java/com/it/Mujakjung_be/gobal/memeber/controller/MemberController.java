@@ -1,18 +1,17 @@
 package com.it.Mujakjung_be.gobal.memeber.controller;
 
-import com.it.Mujakjung_be.gobal.memeber.dto.JoinRequest;
-import com.it.Mujakjung_be.gobal.memeber.dto.LoginRequest;
-import com.it.Mujakjung_be.gobal.memeber.dto.LoginResponse;
-import com.it.Mujakjung_be.gobal.memeber.dto.MyPageResponse;
+import com.it.Mujakjung_be.gobal.memeber.dto.*;
 import com.it.Mujakjung_be.gobal.memeber.repository.MemberRepository;
 import com.it.Mujakjung_be.gobal.memeber.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
@@ -66,6 +65,16 @@ public class MemberController {
         // Service에서 DB 조회 후 DTO로 변환
         return ResponseEntity.ok(service.getMyPage(email));
 
-
     }
+    // 프로필 업데이트 (닉네임, 사진, 자기소개 등)
+    // PATCH는 리소스를 부분적으로 수정할 때 사용해!
+    @PostMapping("/proflie")
+    public ResponseEntity<String> updateProfile(Authentication authentication, @RequestBody ProfileRequest request ){
+        String email = authentication.getName();
+        log.info("프로필 업데이트 요청: {}", email);
+
+        service.updateProfile(email, request);
+        return ResponseEntity.ok("프로필 성공적으로 업데이트 되었습니다");
+    }
+
 }
