@@ -40,6 +40,9 @@ public class MemberEntity {
     private String phone;
 
     private String gender;
+    private String nickname;
+    private String profileTmg;
+    private String bio; //자기 소개
 
     @Column(length = 100)
     private Address address; // 주소
