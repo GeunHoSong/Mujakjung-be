@@ -50,7 +50,7 @@ public class MemberEntity {
     @Column(nullable = false)
     private Role role;
 
-    public MemberEntity (String email, String password, String name, String phone, String gender, Address address, Role role ){
+    public MemberEntity (String email, String password, String name, String phone, String gender, Address address, Role role  ,String nickname, String profileTmg, String bio ){
         this.email = email;
         this.password = password;
         this.name = name;
@@ -58,6 +58,9 @@ public class MemberEntity {
         this.gender= gender;
         this.address = address;
         this.role = role;
+        this.nickname = nickname;
+        this.profileTmg=  profileTmg;
+        this.bio = bio;
     }
 
 
