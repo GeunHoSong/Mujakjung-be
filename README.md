@@ -46,9 +46,11 @@ docker run -d \
   -e MYSQL_USER=mujakjung \
   -e MYSQL_PASSWORD=1234 \
   mysql:8
-### application.properties 설정
+### 2️⃣ application.properties 설정
   spring.datasource.url=jdbc:mysql://localhost:3361/mujakjung
   spring.datasource.username=mujakjung
   spring.datasource.password=1234
   spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
+### 3️⃣ 서버 실행
+  ./gradlew bootRun
