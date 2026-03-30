@@ -3,7 +3,6 @@ Spring Boot 기반의 안정적인 회원 관리 시스템 > JPA와 MySQL을 활
 
 ## Tech Stack
 
-<img width="2560" height="1528" alt="image" src="https://github.com/user-attachments/assets/1435d1f2-ca81-4fd1-849a-067cca2019ce" />
 #### 주요 기능
  -- 회원 관리 (Member)
    -- [x] Spring Security 기반 회원 가입 및 로그인
