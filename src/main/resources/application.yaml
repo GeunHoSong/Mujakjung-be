@@ -1,4 +1,7 @@
 
+kakao:
+  client-id: e51377400e77cd38bd0ddfdc9c411d60
+  redirect-uri: http://localhost:8080/auth/kakao/callback
 # =========================================
 # 🌐 서버 설정
 # =========================================
@@ -57,3 +60,5 @@ spring:
 jwt:
   secret: your-secret-key-your-secret-key-your-secret-key
   expiration: 3600000
+
+
