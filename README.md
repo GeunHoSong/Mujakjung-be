@@ -46,17 +46,35 @@ docker run -d \
   -e MYSQL_USER=mujakjung \
   -e MYSQL_PASSWORD=1234 \
   mysql:8
+2️⃣ application.properties 설정
+src/main/resources/application.properties 파일에 아래 설정을 적용하세요.
 
-
-
-### 1️⃣ MySQL 실행 (Docker)
-  spring.datasource.url=jdbc:mysql://localhost:3361/mujakjung
-  spring.datasource.username=mujakjung
-  spring.datasource.password=1234
-  spring.jpa.hibernate.ddl-auto=update
+Properties
+spring.datasource.url=jdbc:mysql://localhost:3361/mujakjung
+spring.datasource.username=mujakjung
+spring.datasource.password=1234
+spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
+3️⃣ 서버 실행
+Bash
+./gradlew bootRun
+또는 IDE(IntelliJ)에서 MujakjungBeApplication을 실행하세요.
 
+🗂️ 프로젝트 구조
+Plaintext
+com.it.Mujakjung_be
+ ├─ global           # 전역 설정 (Kakao, Security, JWT 등)
+ ├─ member           # 회원 도메인
+ │   ├─ controller   # API 엔드포인트
+ │   ├─ service      # 비즈니스 로직
+ │   ├─ repository   # 데이터 접근 (JPA)
+ │   └─ entity       # DB 테이블 매핑
+ └─ MujakjungBeApplication
+📌 향후 계획
+[ ] JWT 로그인: Access/Refresh Token 발급 및 검증 로직 완성
 
+[ ] 예외 처리: @RestControllerAdvice를 활용한 공통 에러 응답 처리
 
-### 1️⃣ MySQL 실행 (Docker)
-  ./gradlew bootRun
+[ ] API 문서화: Swagger(SpringDoc) 도입
+
+[ ] 테스트: JUnit5 기반 서비스 레이어 테스트 코드 작성
