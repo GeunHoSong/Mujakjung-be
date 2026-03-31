@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 회원가입과 로그인은 아무나 접근 가능(permitAll)
                         .requestMatchers("/api/member/join", "/api/member/login").permitAll()
-                        .requestMatchers("/auth/kakao/**").permitAll()
+                        .requestMatchers("auth/kakao/**","/api/auth/kakao/**").permitAll()
                         // /api/admin/으로 시작하는 건 ADMIN 권한만 가능
                         .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
                         // /api/member/로 시작하는 건 USER나 ADMIN 권한이 있어야 함
