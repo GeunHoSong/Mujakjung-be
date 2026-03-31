@@ -2,7 +2,10 @@ package com.it.Mujakjung_be.gobal.kakao.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.it.Mujakjung_be.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import com.it.Mujakjung_be.user.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -11,11 +14,12 @@ import org.springframework.http.*;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class KakaoService {
 
     private final String REST_API_KEY = "c20fa1e751278dc7d481f42f175401b2";
     private final String REDIRECT_URI = "http://localhost:8080/auth/kakao/callback";
-
+    private final UserRepository repository;
     /**
      * [1단계] 인가 코드로 액세스 토큰 받기
      */
@@ -85,4 +89,30 @@ public class KakaoService {
             throw e;
         }
     }
+
+    public void saveUser(String userInfo) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(userInfo);
+            Long kakaoid = jsonNode.get("id").asLong();
+
+            // db 조회
+            User user = repository.findByKakaoId(kakaoid);
+
+            // 없으면 저장
+            if (user == null) {
+                User newUser = new User();
+                newUser.setKakaoid(kakaoid);
+
+                repository.save(newUser);
+            } else {
+                System.out.println("이미 가입된 회원");
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("유저 저장 실패");
+        }
+    }
+
+
 }
