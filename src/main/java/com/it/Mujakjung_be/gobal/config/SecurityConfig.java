@@ -2,6 +2,7 @@ package com.it.Mujakjung_be.gobal.config;
 
 import com.it.Mujakjung_be.gobal.memeber.util.JwtFilter;
 import com.it.Mujakjung_be.gobal.memeber.util.JwtUtil;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 @Slf4j
 @Configuration
@@ -86,9 +91,31 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cs = new CorsConfiguration();
 
+        // 1. 모든 도메인(Origin) 허용
+        // "*"은 모든 곳에서 접속 가능하다는 뜻이야!
+        cs.setAllowedOriginPatterns(Arrays.asList("*"));
 
+        // 2. 허용할 HTTP 메서드 설정
+        // GET, POST 등 우리가 사용할 기능들을 허락해주는 거야. (OPTIONS 오타 수정 완료!)
+        cs.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // 3. 허용할 헤더 설정
+        // 클라이언트가 보낼 수 있는 모든 헤더 정보를 다 받겠다는 뜻!
+        cs.setAllowedHeaders(Arrays.asList("*"));
+
+        // 4. 자격 증명 허용
+        // 쿠키나 인증 정보를 주고받을 수 있게 true로 설정해줘.
+        cs.setAllowCredentials(true);
+
+        // 5. 설정을 실제 경로에 적용
+        // "/**"는 서버의 모든 주소에 이 설정을 다 적용하겠다는 의미야.
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", cs); // registerCorsConfiguration 만든 cors 규칙을 적용할 지 등록 하는 결제 도장
+
+
+        return source;
     }
 }
