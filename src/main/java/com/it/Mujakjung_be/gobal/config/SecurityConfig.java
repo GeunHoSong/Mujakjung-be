@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Slf4j
 @Configuration
@@ -46,8 +48,8 @@ public class SecurityConfig {
                 // 3. URL별 접근 권한 제어
                 .authorizeHttpRequests(auth -> auth
                         // 회원가입과 로그인은 아무나 접근 가능(permitAll)
-                        .requestMatchers("/api/member/join", "/api/member/login").permitAll()
-                        .requestMatchers("auth/kakao/**","/api/auth/kakao/**").permitAll()
+                        .requestMatchers("/","/api/member/join", "/api/member/login").permitAll()
+                        .requestMatchers("/auth/kakao/**","/api/auth/kakao/**").permitAll()
                         // /api/admin/으로 시작하는 건 ADMIN 권한만 가능
                         .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
                         // /api/member/로 시작하는 건 USER나 ADMIN 권한이 있어야 함
@@ -81,5 +83,12 @@ public class SecurityConfig {
                 );
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration cs = new CorsConfiguration();
+
+
     }
 }

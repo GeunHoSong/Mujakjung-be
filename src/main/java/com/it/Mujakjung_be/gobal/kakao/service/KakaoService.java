@@ -102,7 +102,7 @@ public class KakaoService {
             // 없으면 저장
             if (user == null) {
                 User newUser = new User();
-                newUser.setKakaoid(kakaoid);
+                newUser.setKakaoId(kakaoid);;
 
                 repository.save(newUser);
             } else {
