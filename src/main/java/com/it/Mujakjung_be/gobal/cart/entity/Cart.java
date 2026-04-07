@@ -1,5 +1,6 @@
 package com.it.Mujakjung_be.gobal.cart.entity;
 
+import com.it.Mujakjung_be.gobal.memeber.entity.MemberEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class Cart {
     // 회원 엔티티 와 직접 연결 (가장 중요)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_email", referencedColumnName = "email")
-    private Member member;
+    private MemberEntity member;
 
     // 상품 정보
     @Column(nullable = false)
