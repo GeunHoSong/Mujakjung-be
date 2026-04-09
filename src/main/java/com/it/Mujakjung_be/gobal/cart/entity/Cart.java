@@ -22,7 +22,7 @@ public class Cart {
 
     // 회원 엔티티 와 직접 연결 (가장 중요)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_email", referencedColumnName = "email")
+    @JoinColumn(name = "user_email")
     private MemberEntity member;
 
     // 상품 정보
