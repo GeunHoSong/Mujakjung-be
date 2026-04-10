@@ -1,9 +1,8 @@
 package com.it.Mujakjung_be.gobal.admin.travel;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 public class TravelEntity {
@@ -14,4 +13,20 @@ public class TravelEntity {
     private String category; //  국내 해외
     private String title;  // 이름
     private String location;// 위치
+
+    @Column(columnDefinition = "TEXT")
+    private String content; // 상세 내용
+
+
+    private String imageName; // 서버에 저장된 이미지 파일명 (예: uuid_image.png)
+    private String imagePath; // 이미지 접근 경로
+
+    @Column(updatable = false)
+    private LocalDateTime regDate; // 등록 날짜
+
+
+    @PrePersist
+    public void prePersist(){
+        this.regDate = LocalDateTime.now();
+    }
 }
