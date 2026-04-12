@@ -8,6 +8,8 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
@@ -25,5 +27,10 @@ public class TravelController {
     public ResponseEntity<TravelDTO> findById(@PathVariable  Long id){
         TravelDTO travelDetail = service.getTravelDetail(id);
         return ResponseEntity.ok(travelDetail);
+    }
+
+    @GetMapping("/travel/list")
+    public ResponseEntity<List<TravelDTO>> findAll(){
+        return ResponseEntity.ok(service.getAllTravels());
     }
 }

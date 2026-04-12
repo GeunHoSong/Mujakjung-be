@@ -7,6 +7,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class TravelService {
@@ -35,6 +39,18 @@ public class TravelService {
             dto.setContent(entity.getContent());
             return dto;
         }).orElseThrow(()-> new  RuntimeException("해당 여행지를 찾을 수 없습니다"));
+    }
+
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public List<TravelDTO> getAllTravels(){
+        return repository.findAll().stream().map(en ->{
+            TravelDTO dto = new TravelDTO();
+            dto.setId(en.getId());
+            dto.setTitle(en.getTitle());
+            dto.setCategory(en.getCategory());
+            dto.setLocation(en.getLocation());
+            return dto;
+        }).collect(Collectors.toList());
     }
 
 
