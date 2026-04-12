@@ -1,4 +1,4 @@
-package com.it.Mujakjung_be.gobal.admin.travel;
+package com.it.Mujakjung_be.gobal.admin.entity;
 
 import jakarta.persistence.*;
 
