@@ -1,8 +1,12 @@
 package com.it.Mujakjung_be.member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.it.Mujakjung_be.gobal.memeber.dto.JoinRequest;
-import com.it.Mujakjung_be.gobal.memeber.repository.MemberRepository;
+import com.it.Mujakjung_be.global.memeber.dto.JoinRequest;
+import com.it.Mujakjung_be.global.memeber.entity.MemberEntity;
+import com.it.Mujakjung_be.global.memeber.entity.Role;
+import com.it.Mujakjung_be.global.memeber.repository.MemberRepository;
+import com.it.Mujakjung_be.global.memeber.service.MemberService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -58,7 +62,10 @@ class MemberApiTest {
      *   @Autowired
      *   private MemberRepository repository;
      */
+    @Autowired
     private MemberRepository repository;
+    @Autowired
+    private MemberService service;
 
     /**
      * ✅ 회원가입 성공 테스트(의도)
@@ -128,6 +135,31 @@ class MemberApiTest {
                 // ✅ 기대값: 응답 바디에 에러 메시지가 들어오는지 확인
                 // (현재 응답이 text/plain이라서 content().string(...)으로 검사하는 게 맞음)
                 .andExpect(content().string("이미 가입된 이메일 입니다"));
+    }
+
+
+    @Test
+    @DisplayName("로그인 성공 테스트 이메일과 비밀 번호 일치 하면 성공 ")
+    void loginSuccessText(){
+        //  1. Given: 테스트용 회원 미리 저장
+        String email = "save_test@test.com";
+        String password = "test1234";
+
+
+        MemberEntity m = new MemberEntity();
+        m.setEmail(email);
+        m.setPassword(password);
+        m.setName("로그인 테스트");
+        m.setRole(Role.USER);
+        repository.save(m);
+
+        // when: 로그인 로직 실행
+        //memberservice login 메서드가 있다고 가정
+        boolean loginResult = service.login(email, password);
+
+        // then: 결과 확인
+        assertTrue(loginResult);
+        System.out.println("로그인 테스트 성공");
     }
 
 

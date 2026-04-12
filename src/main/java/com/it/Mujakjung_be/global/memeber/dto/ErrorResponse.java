@@ -1,0 +1,20 @@
+package com.it.Mujakjung_be.global.memeber.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ErrorResponse {
+    private String message;
+    private int status;
+
+   public String getMessage(){
+       return message;
+   }
+   public int getStatus(){
+       return status;
+   }
+}
