@@ -1,12 +1,10 @@
 package com.it.Mujakjung_be.gobal.admin.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 public class TravelDTO {
 
     private String category;
@@ -15,4 +13,38 @@ public class TravelDTO {
     private String content;
 
     // 기본 생성자 (jackson 라이브러리 json를 객체를 바꿀때 필요)
+    public TravelDTO (){}
+
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }

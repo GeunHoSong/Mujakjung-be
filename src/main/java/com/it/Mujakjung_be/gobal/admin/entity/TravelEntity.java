@@ -1,10 +1,14 @@
 package com.it.Mujakjung_be.gobal.admin.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 public class TravelEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
