@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 /**
  * 회원 정보를 저장하는 JPA 엔티티 클래스
  * → DB의 member 테이블과 매핑됨
@@ -46,8 +48,10 @@ public class MemberEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+    @Column(name = "reg-date", updatable = false)
+    private LocalDateTime regDate;
 
-    public MemberEntity (String email, String password, String name, String phone, String gender, Address address, Role role  ,String nickname, String profileTmg, String bio ){
+    public MemberEntity (String email, String password, String name, String phone, String gender, Address address, Role role  ,String nickname, String profileTmg, String bio , LocalDateTime regDate ){
         this.email = email;
         this.password = password;
         this.name = name;
@@ -58,6 +62,7 @@ public class MemberEntity {
         this.nickname = nickname;
         this.profileTmg=  profileTmg;
         this.bio = bio;
+        this.regDate = regDate;
     }
 
 

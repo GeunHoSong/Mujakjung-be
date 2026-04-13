@@ -1,6 +1,7 @@
 package com.it.Mujakjung_be.global.memeber.controller;
 
 import com.it.Mujakjung_be.global.memeber.dto.*;
+import com.it.Mujakjung_be.global.memeber.entity.MemberEntity;
 import com.it.Mujakjung_be.global.memeber.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j // 로그 기록을 위한 어노테이션
 @RestController // JSON 형태로 데이터를 주고받는 API 컨트롤러
@@ -89,5 +92,10 @@ public class MemberController {
         // 프로필 수정 로직 실행
         service.updateProfile(email, request);
         return ResponseEntity.ok("프로필 성공적으로 업데이트 되었습니다");
+    }
+
+    @GetMapping("/members")
+    public ResponseEntity<List<MemberResponse>> getAllMember(){
+        service.findAllMembersForAdmin();
     }
 }

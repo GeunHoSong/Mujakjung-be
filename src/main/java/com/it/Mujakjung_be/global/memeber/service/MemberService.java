@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -56,18 +57,16 @@ public class MemberService {
      * 이메일과 비밀번호를 확인하고, 맞으면 JWT 토큰을 발급함
      */
     public LoginResponse login(LoginRequest request){
-        // 1. 입력받은 이메일로 회원 정보 찾기
-        MemberEntity en = repository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀 번호가 없습니다"));
-
-        // 2. 비밀번호 검증 (암호화된 비번과 사용자가 입력한 비번이 맞는지 확인)
-        if (!encoder.matches(request.getPassword(), en.getPassword())){
-            throw new IllegalArgumentException("이메일 또는 비밀 번호가 틀렸습니다");
+        // 입력 받은 이메일 로 회원 정보 찾기
+         MemberEntity en = repository.findByEmail(request.getEmail()).orElseThrow(()-> new IllegalArgumentException("이메일 또는 비밀 번호를 찾을 수 없습니다"));
+        // 비밀 번호 검증
+        if(!encoder.matches(request.getPassword(), en.getPassword())){
+            throw new IllegalArgumentException("이메일 또는 비밀 번호를 찾을 수 없습니다");
         }
-
-        // 3. 로그인 성공 시 JWT 토큰 생성 후 반환
+        // 로그인 성공시 jwt 토큰 생성
         String token = jwtUtil.createToken(en.getEmail());
-        return new LoginResponse(token);
+        // 토큰 권한(Admin/user) 이름으로 dto 담아서 변경 en.getRole().name()을 통해 Enum 값을 문자열로 변환하여 전달합니다.
+        return new LoginResponse(token, en.getRole().name(), en.getName());
     }
 
     /**
@@ -117,5 +116,19 @@ public class MemberService {
             return member.get().getPassword().equals(password);
         }
         return false;
+    }
+
+    public List<MemberResponse> findAllMembersForAdmin() {
+        // 1. 엔티티 리스트 가져오기
+        List<MemberEntity> all = repository.findAll();
+
+        // 2. DTO로 변환 (new 키워드와 괄호 위치 주의!)
+        return all.stream().map(m -> new MemberResponse(
+                m.getId(),
+                m.getName(),
+                m.getEmail(),
+                m.getRole().name(), // Enum은 .name()으로 문자열 변환
+                "" // regDate가 엔티티에 아직 없다면 일단 빈 문자열로 두자!
+        )).toList();
     }
 }
