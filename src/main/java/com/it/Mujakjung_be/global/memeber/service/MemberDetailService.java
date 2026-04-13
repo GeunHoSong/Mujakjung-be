@@ -24,24 +24,17 @@ public class MemberDetailService implements UserDetailsService {
         this.repository = repository;
     }
 
-    /**
-     * 시큐리티가 로그인을 시도할 때 내부적으로 호출하는 메서드
-     * @param email 사용자가 입력한 아이디(이메일)
-     * @return 시큐리티가 이해할 수 있는 형태의 사용자 정보(UserDetails)
-     */
+    // MemberDetailService.java
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
-        // 1. DB에서 이메일로 사용자 찾기
         MemberEntity entity = repository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + email));
 
-        // 2. 찾은 회원 정보를 시큐리티 전용 'User' 객체에 담아서 반환
         return new org.springframework.security.core.userdetails.User(
-                entity.getEmail(),    // 아이디
-                entity.getPassword(), // 암호화된 비밀번호
+                entity.getEmail(),
+                entity.getPassword(),
                 Collections.singletonList(
-                        // 3. 권한 설정 (예: ROLE_USER)
+                        // DB의 ADMIN을 "ROLE_ADMIN"으로 변환해서 시큐리티에 보고
                         new SimpleGrantedAuthority("ROLE_" + entity.getRole().name())
                 )
         );

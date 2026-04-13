@@ -51,14 +51,14 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // 4. URL별 접근 권한 제어
+                // SecurityConfig.java의 filterChain 메서드 내부
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/api/member/join", "/api/member/login").permitAll()
                         .requestMatchers("/auth/kakao/**", "/api/auth/kakao/**").permitAll()
 
-                        // DB에 'ADMIN'이라고 저장되어 있다면 hasAuthority를 쓰는 게 더 정확해!
-                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/member/**").hasAnyAuthority("USER", "ADMIN")
+                        // hasRole("ADMIN")은 내부적으로 "ROLE_ADMIN" 권한이 있는지 확인해!
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/member/**").hasAnyRole("USER", "ADMIN")
 
                         .anyRequest().authenticated()
                 )

@@ -96,6 +96,7 @@ public class MemberController {
 
     @GetMapping("/members")
     public ResponseEntity<List<MemberResponse>> getAllMember(){
-        service.findAllMembersForAdmin();
+        List<MemberResponse> allMembersForAdmin = service.findAllMembersForAdmin();
+        return ResponseEntity.ok(allMembersForAdmin);
     }
 }
