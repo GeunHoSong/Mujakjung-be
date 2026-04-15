@@ -1,8 +1,8 @@
 package com.it.Mujakjung_be.cart;
 
-import com.it.Mujakjung_be.global.memeber.entity.MemberEntity;
-import com.it.Mujakjung_be.global.memeber.entity.Role;
-import com.it.Mujakjung_be.global.memeber.repository.MemberRepository;
+import com.it.Mujakjung_be.global.member.entity.MemberEntity;
+import com.it.Mujakjung_be.global.member.entity.Role;
+import com.it.Mujakjung_be.global.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

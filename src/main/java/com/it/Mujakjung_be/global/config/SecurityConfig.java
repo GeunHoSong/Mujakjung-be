@@ -1,6 +1,6 @@
 package com.it.Mujakjung_be.global.config;
 
-import com.it.Mujakjung_be.global.memeber.util.JwtFilter;
+import com.it.Mujakjung_be.global.member.util.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -55,9 +55,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/api/member/join", "/api/member/login").permitAll()
                         .requestMatchers("/auth/kakao/**", "/api/auth/kakao/**").permitAll()
+                        .requestMatchers("/api/travels/**").permitAll()
 
                         // hasRole("ADMIN")은 내부적으로 "ROLE_ADMIN" 권한이 있는지 확인해!
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**").permitAll()
                         .requestMatchers("/api/member/**").hasAnyRole("USER", "ADMIN")
 
                         .anyRequest().authenticated()

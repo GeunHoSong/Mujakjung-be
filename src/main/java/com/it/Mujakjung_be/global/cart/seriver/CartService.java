@@ -2,8 +2,8 @@ package com.it.Mujakjung_be.global.cart.service;
 
 import com.it.Mujakjung_be.global.cart.entity.Cart;
 import com.it.Mujakjung_be.global.cart.repository.CartRepository;
-import com.it.Mujakjung_be.global.memeber.entity.MemberEntity;
-import com.it.Mujakjung_be.global.memeber.repository.MemberRepository;
+import com.it.Mujakjung_be.global.member.entity.MemberEntity;
+import com.it.Mujakjung_be.global.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

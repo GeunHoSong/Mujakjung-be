@@ -1,6 +1,6 @@
 package com.it.Mujakjung_be.global.cart.entity;
 
-import com.it.Mujakjung_be.global.memeber.entity.MemberEntity;
+import com.it.Mujakjung_be.global.member.entity.MemberEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

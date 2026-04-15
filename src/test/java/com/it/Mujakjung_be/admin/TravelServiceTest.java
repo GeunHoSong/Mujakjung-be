@@ -1,7 +1,7 @@
 package com.it.Mujakjung_be.admin;
 
-import com.it.Mujakjung_be.global.admin.dto.TravelDTO;
-import com.it.Mujakjung_be.global.admin.service.TravelService;
+import com.it.Mujakjung_be.global.travel.dto.TravelDTO;
+import com.it.Mujakjung_be.global.travel.service.TravelService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
