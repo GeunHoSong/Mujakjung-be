@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,101 +18,65 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-@Slf4j
-@Configuration
-@RequiredArgsConstructor
+// 1. 설정 클래스 선언부
+@Configuration        // 이 클래스를 스프링 설정으로 사용함
+@EnableWebSecurity    // 스프링 시큐리티 기능을 활성화함 (손코딩 시 강조하기 좋아!)
+@RequiredArgsConstructor // final이 붙은 필드(JwtFilter)의 생성자를 자동으로 만듦
+@Slf4j                // 로그 출력을 위한 어노테이션
 public class SecurityConfig {
 
-    private final JwtFilter jwtFilter; // 우리가 만든 JWT 필터 주입
+    private final JwtFilter jwtFilter;
+    private final AccessDeniedHandler accessDeniedHandler;
+    private final UnauthorizedHandler unauthorizedHandler;
 
-    /**
-     * 비밀번호 암호화 빈(Bean) 등록
-     * BCrypt 해시 함수를 사용해서 비밀번호를 안전하게 암호화함
-     */
+    // 2. 암호화 빈 등록
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * 시큐리티의 핵심 설정 (필터 체인)
-     */
+    // 3. HTTP 보안 설정 (가장 중요한 부분)
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http
-                // 1. CORS 설정 연결 (이게 빠져서 에러 났던 거야!)
+                // CORS/CSRF/Session 설정
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-
-                // 2. CSRF 비활성화
                 .csrf(csrf -> csrf.disable())
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // 3. 세션 정책 설정
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-
-                // SecurityConfig.java의 filterChain 메서드 내부
+                // URL 권한 제어
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/api/member/join", "/api/member/login").permitAll()
-                        .requestMatchers("/auth/kakao/**", "/api/auth/kakao/**").permitAll()
-                        .requestMatchers("/api/travels/**").permitAll()
-
-                        // hasRole("ADMIN")은 내부적으로 "ROLE_ADMIN" 권한이 있는지 확인해!
-                        .requestMatchers("/api/admin/**").permitAll()
+                        .requestMatchers("/api/travels/**", "/api/auth/kakao/**").permitAll()
                         .requestMatchers("/api/member/**").hasAnyRole("USER", "ADMIN")
-
                         .anyRequest().authenticated()
                 )
 
-                .formLogin(form -> form.disable())
-                .httpBasic(basic -> basic.disable())
-
+                // 로그인 방식 비활성화 및 필터 추가
+                .formLogin(f -> f.disable())
+                .httpBasic(b -> b.disable())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
+                // 예외 처리 (EntryPoint, AccessDeniedHandler)
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(401);
-                            response.setContentType("application/json;charset=UTF-8");
-                            response.getWriter().write("{\"message\":\"인증이 필요합니다\", \"status\": 401}");
-                        })
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.setStatus(403);
-                            response.setContentType("application/json;charset=UTF-8");
-                            response.getWriter().write("{\"message\": \"권한이 필요 합니다\", \"status\": 403}");
-                        })
+                        .authenticationEntryPoint(unauthorizedHandler) // 따로 메서드로 빼면 손코딩이 깔끔해져!
+                        .accessDeniedHandler(accessDeniedHandler)
                 );
 
         return http.build();
     }
 
-
+    // 4. CORS 설정 Bean
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration cs = new CorsConfiguration();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(Arrays.asList("*"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowCredentials(true);
 
-        // 1. 모든 도메인(Origin) 허용
-        // "*"은 모든 곳에서 접속 가능하다는 뜻이야!
-        cs.setAllowedOriginPatterns(Arrays.asList("*"));
-
-        // 2. 허용할 HTTP 메서드 설정
-        // GET, POST 등 우리가 사용할 기능들을 허락해주는 거야. (OPTIONS 오타 수정 완료!)
-        cs.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
-        // 3. 허용할 헤더 설정
-        // 클라이언트가 보낼 수 있는 모든 헤더 정보를 다 받겠다는 뜻!
-        cs.setAllowedHeaders(Arrays.asList("*"));
-
-        // 4. 자격 증명 허용
-        // 쿠키나 인증 정보를 주고받을 수 있게 true로 설정해줘.
-        cs.setAllowCredentials(true);
-
-        // 5. 설정을 실제 경로에 적용
-        // "/**"는 서버의 모든 주소에 이 설정을 다 적용하겠다는 의미야.
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", cs); // registerCorsConfiguration 만든 cors 규칙을 적용할 지 등록 하는 결제 도장
-
-
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 }
