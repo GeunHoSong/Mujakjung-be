@@ -1,4 +1,4 @@
-package com.it.Mujakjung_be.user.entity;
+package com.it.Mujakjung_be.global.user.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

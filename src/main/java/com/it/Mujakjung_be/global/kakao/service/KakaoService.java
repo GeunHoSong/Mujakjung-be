@@ -2,10 +2,10 @@ package com.it.Mujakjung_be.global.kakao.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.it.Mujakjung_be.user.repository.UserRepository;
+import com.it.Mujakjung_be.global.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.it.Mujakjung_be.user.entity.User;
+import com.it.Mujakjung_be.global.user.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
