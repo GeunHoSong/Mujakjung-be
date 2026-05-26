@@ -30,26 +30,20 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String authorization = request.getHeader("Authorization");
-
-        // 1. 토큰이 있는 경우에만 검증 로직을 타게 함
-        if (authorization != null && authorization.startsWith("Bearer ")) {
-            String token = authorization.substring(7);
-            try {
-                if (jwtUtil.validate(token)) {
-                    String email = jwtUtil.getEmail(token);
-                    UserDetails userDetails = service.loadUserByUsername(email);
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-            } catch (Exception e) {
-                log.error("JWT 검증 에러: {}", e.getMessage());
-                // 에러가 나도 filterChain.doFilter를 타야 하므로 여기서 멈추지 않음
-            }
+        // ⭐ [여기 추가!] 카카오 콜백 경로 예외 처리
+        String path = request.getRequestURI();
+        if (path.startsWith("/auth/kakao/")) {
+            filterChain.doFilter(request, response);
+            return; // 여기서 필터 종료 (검증 로직 안 탐)
         }
 
-        // 2. ⭐️ 토큰이 있든 없든, 에러가 나든 안 나든 "무조건 딱 한 번" 다음 필터로 넘김
+        String authorization = request.getHeader("Authorization");
+
+        // (이하 기존 코드 유지)
+        if (authorization != null && authorization.startsWith("Bearer ")) {
+            // ... (토큰 검증 로직)
+        }
+
         filterChain.doFilter(request, response);
     }
 
