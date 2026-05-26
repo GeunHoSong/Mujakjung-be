@@ -2,6 +2,7 @@ package com.it.Mujakjung_be.global.kakao.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.it.Mujakjung_be.global.member.util.JwtProvider;
 import com.it.Mujakjung_be.global.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ public class KakaoService {
     private final String REST_API_KEY = "c20fa1e751278dc7d481f42f175401b2";
     private final String REDIRECT_URI = "http://localhost:8080/auth/kakao/callback";
     private final UserRepository repository;
+    private final JwtProvider jwtProvider;
     /**
      * [1단계] 인가 코드로 액세스 토큰 받기
      */
@@ -115,4 +117,15 @@ public class KakaoService {
     }
 
 
+    public String createToken(String userInfo) {
+        // userInfo에서 이메일이나 유저 고유 id 를 뽑아내서 토큰 만듬
+        // 예를 들어  userInfo 가 json 문자열이며 파싱 해서 이메일 가지고 옴
+        String email = parseEmailFromUserInfo(userInfo);
+        // jwt  토큰 생성 email 정보를 담아서 토큰 생성
+        return jwtProvider.createToken(email);
+    }
+
+    private String parseEmailFromUserInfo(String userInfo) {
+        return "user_email@examle.com";
+    }
 }

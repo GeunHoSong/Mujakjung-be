@@ -4,7 +4,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component; // 💡 빈 등록을 위해 필수!
 import java.io.IOException;
 
@@ -14,7 +13,7 @@ import java.io.IOException;
  * 요청한 리소스에 접근할 권한(Authority)이 없을 때 동작을 정의해.
  */
 @Component // 스프リング이 이 클래스를 관리하도록 빈(Bean)으로 등록
-public class CustomAccessDeniedHandler implements AccessDeniedHandler {
+public class AccessDeniedHandler implements org.springframework.security.web.access.AccessDeniedHandler {
 
     /**
      * handle 메서드는 권한 부족 예외 발생 시 자동으로 호출돼.

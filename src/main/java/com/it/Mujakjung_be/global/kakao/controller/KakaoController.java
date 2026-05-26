@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("auth/kakao")
+@RequestMapping("/auth/kakao")
 @RequiredArgsConstructor
 public class KakaoController {
 
@@ -34,9 +34,12 @@ public class KakaoController {
 
         // 3. DB 저장
         service.saveUser(userInfo);
+        String jwtToken  = service.createToken(userInfo);
+
+
 
         // 4. ⭐ 직접 리다이렉트 시키기 (메인 화면으로!)
         // 따로 메서드 만들 필요 없이 response 객체가 가진 기능을 호출만 하면 돼.
-        response.sendRedirect("http://localhost:5173/?login=success");
+        response.sendRedirect("http://localhost:5173/?login=success" + jwtToken);
     }
 }

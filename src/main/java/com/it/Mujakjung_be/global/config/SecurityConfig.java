@@ -18,59 +18,61 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-// 1. 설정 클래스 선언부
-@Configuration        // 이 클래스를 스프링 설정으로 사용함
-@EnableWebSecurity    // 스프링 시큐리티 기능을 활성화함 (손코딩 시 강조하기 좋아!)
-@RequiredArgsConstructor // final이 붙은 필드(JwtFilter)의 생성자를 자동으로 만듦
-@Slf4j                // 로그 출력을 위한 어노테이션
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
     private final AccessDeniedHandler accessDeniedHandler;
     private final UnauthorizedHandler unauthorizedHandler;
 
-    // 2. 암호화 빈 등록
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // 3. HTTP 보안 설정 (가장 중요한 부분)
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // CORS/CSRF/Session 설정
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // URL 권한 제어
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/api/member/join", "/api/member/login").permitAll()
-                        .requestMatchers("/api/travels/**", "/api/auth/kakao/**").permitAll()
+                        // 💡 [여기 집중!] 카카오 콜백 주소와 파비콘을 filterChain 내부의 permitAll에 직접 등록!
+                        .requestMatchers(
+                                "/",
+                                "/api/member/join",
+                                "/api/member/login",
+                                "/api/health",
+                                "/auth/kakao/**",   // 👈 카카오 프리패스 주소 추가!
+                                "/favicon.ico"      // 👈 파비콘 프리패스 주소 추가!
+                        ).permitAll()
+
+                        .requestMatchers("/api/travels/**", "/api/search/**").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/member/**").hasAnyRole("USER", "ADMIN")
+
                         .anyRequest().authenticated()
                 )
-
-                // 로그인 방식 비활성화 및 필터 추가
                 .formLogin(f -> f.disable())
                 .httpBasic(b -> b.disable())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
-                // 예외 처리 (EntryPoint, AccessDeniedHandler)
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(unauthorizedHandler) // 따로 메서드로 빼면 손코딩이 깔끔해져!
+                        .authenticationEntryPoint(unauthorizedHandler)
                         .accessDeniedHandler(accessDeniedHandler)
                 );
 
         return http.build();
     }
 
-    // 4. CORS 설정 Bean
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(Arrays.asList("*"));
+        config.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowCredentials(true);
@@ -79,4 +81,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
+    // ❌ 맨 아래에 있던 WebSecurityCustomizer 관련 @Bean 메서드는 통째로 삭제해버리면 돼!
 }
