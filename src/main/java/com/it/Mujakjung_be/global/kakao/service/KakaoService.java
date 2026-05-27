@@ -2,8 +2,9 @@ package com.it.Mujakjung_be.global.kakao.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.it.Mujakjung_be.global.member.util.JwtProvider;
+import com.it.Mujakjung_be.global.member.util.JwtProvider; //
 import com.it.Mujakjung_be.global.user.repository.UserRepository;
+import io.jsonwebtoken.JwtParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.it.Mujakjung_be.global.user.entity.User;

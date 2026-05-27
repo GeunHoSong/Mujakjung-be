@@ -1,4 +1,5 @@
-// JwtProvider.java
+package com.it.Mujakjung_be.global.member.util; // 1. 패키지 선언은 맨 윗줄에!
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -9,20 +10,19 @@ import java.util.Date;
 @Component
 public class JwtProvider {
 
-    // 이 키는 Base64로 인코딩된 256비트 이상의 문자열이어야 합니다.
-    // 안전하게 생성한 문자열을 여기에 넣으세요.
-    private final String SECRET_KEY_STRING = "여기에_매우_긴_랜덤_Base64_문자열을_넣으세요_최소_32글자_이상";
+    // 32자 이상인 안전한 키
+    private final String SECRET_KEY_STRING = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz";
 
+    // ✅ 아래처럼 직접 getBytes()를 사용하는 게 훨씬 에러가 적어!
     private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY_STRING);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(SECRET_KEY_STRING.getBytes());
     }
 
     public String createToken(String email) {
         return Jwts.builder()
                 .subject(email)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 86400000))
+                .expiration(new Date(System.currentTimeMillis() + 86400000)) // 24시간
                 .signWith(getSigningKey())
                 .compact();
     }
