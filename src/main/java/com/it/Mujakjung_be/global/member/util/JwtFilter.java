@@ -30,29 +30,33 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        // ⭐ [여기 추가!] 카카오 콜백 경로 예외 처리
         String path = request.getRequestURI();
         if (path.startsWith("/auth/kakao")) {
             filterChain.doFilter(request, response);
-            return; // 여기서 필터 종료 (검증 로직 안 탐)
+            return;
         }
 
         String authorization = request.getHeader("Authorization");
 
-        // (이하 기존 코드 유지)
-        if (authorization != null && authorization.startsWith("Bearer ")) {
-            String token = authorization.substring(7);
-            // 토큰에서 유저 정보
-            String email = jwtUtil.getEmail(token);
-            // db 에서 유저 정보 로드 (이메일 기반 ㅏ으로 조회 하도록 세팅)
-            UserDetails userDetails = service.loadUserByUsername(email);
-            // 인증 객체 ㅏ생성밎 새션 저장
-            UsernamePasswordAuthenticationToken u = new UsernamePasswordAuthenticationToken(userDetails, null , userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(u);
+        try {
+            if (authorization != null && authorization.startsWith("Bearer ")) {
+                String token = authorization.substring(7);
+
+                // ⭐ 여기서 만료된 토큰이면 예외가 발생하는데, catch문으로 이동함
+                String email = jwtUtil.getEmail(token);
+
+                UserDetails userDetails = service.loadUserByUsername(email);
+                UsernamePasswordAuthenticationToken u = new UsernamePasswordAuthenticationToken(userDetails, null , userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(u);
+            }
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            log.warn("토큰이 만료되었습니다: {}", e.getMessage());
+            // 만료된 경우 인증을 설정하지 않고 그냥 통과 (필요하다면 여기서 401 응답을 내려줄 수도 있음)
+        } catch (Exception e) {
+            log.error("토큰 검증 중 오류 발생: {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);
     }
-
 
 }
