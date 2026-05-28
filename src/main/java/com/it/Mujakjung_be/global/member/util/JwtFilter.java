@@ -41,7 +41,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // (이하 기존 코드 유지)
         if (authorization != null && authorization.startsWith("Bearer ")) {
-            // ... (토큰 검증 로직)
+            String token = authorization.substring(7);
+            // 토큰에서 유저 정보
+            String email = jwtUtil.getEmail(token);
+            // db 에서 유저 정보 로드 (이메일 기반 ㅏ으로 조회 하도록 세팅)
+            UserDetails userDetails = service.loadUserByUsername(email);
+            // 인증 객체 ㅏ생성밎 새션 저장
+            UsernamePasswordAuthenticationToken u = new UsernamePasswordAuthenticationToken(userDetails, null , userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(u);
         }
 
         filterChain.doFilter(request, response);

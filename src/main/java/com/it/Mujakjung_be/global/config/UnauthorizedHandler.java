@@ -37,6 +37,7 @@ public class UnauthorizedHandler implements AuthenticationEntryPoint {
         // 3. 실제 응답 바디(Body)에 JSON 형태의 에러 메시지를 작성함
         // 프론트엔드(React 등)에서는 이 메시지를 받아서 "로그인이 필요합니다"라고 띄워줄 수 있어.
         response.getWriter().write("{\"message\":\"인증이 필요합니다\", \"status\": 401}");
+        System.out.println("401 터진 진짜 범인 주소" + request.getRequestURI());
 
         // 💡 팁: 나중에 로그를 남기고 싶다면 여기서 log.error(authException.getMessage())를 쓸 수 있어!
     }

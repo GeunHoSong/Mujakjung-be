@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/auth/kakao")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class KakaoController {
 
     private final KakaoService service;
 
-    @GetMapping("/callback")
+    @GetMapping("/kakao")
     public void kakaoCallback(@RequestParam(value = "code", required = false)String code
     , HttpServletResponse response) throws IOException {
         // 만약 인가 코드

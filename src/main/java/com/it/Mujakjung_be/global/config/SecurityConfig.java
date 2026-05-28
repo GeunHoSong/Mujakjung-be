@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,7 +49,8 @@ public class SecurityConfig {
                                 "/api/member/login",
                                 "/api/health",
                                 "/auth/kakao/**",   // 👈 카카오 프리패스 주소 추가!
-                                "/favicon.ico"      // 👈 파비콘 프리패스 주소 추가!
+                                "/favicon.ico" ,     // 👈 파비콘 프리패스 주소 추가!
+                                "/error"
                         ).permitAll()
 
                         .requestMatchers("/api/travels/**", "/api/search/**").permitAll()
@@ -80,5 +82,10 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer(){
+        return (web -> web.ignoring().requestMatchers("/auth/kakao", "/auth/kakao/**", "favicon.ico"));
     }
 }

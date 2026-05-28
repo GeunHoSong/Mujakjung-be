@@ -18,6 +18,7 @@ public class JwtUtil {
     // 토큰 만료 시간
     private final long expiration;
 
+
     // application.yml 에서 값 가져오기
     public JwtUtil(
             @Value("${jwt.secret}") String secret,
@@ -100,4 +101,5 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload();
     }
+
 }
