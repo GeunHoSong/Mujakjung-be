@@ -81,6 +81,4 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-
-    // ❌ 맨 아래에 있던 WebSecurityCustomizer 관련 @Bean 메서드는 통째로 삭제해버리면 돼!
 }

@@ -32,7 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // ⭐ [여기 추가!] 카카오 콜백 경로 예외 처리
         String path = request.getRequestURI();
-        if (path.startsWith("/auth/kakao/")) {
+        if (path.startsWith("/auth/kakao")) {
             filterChain.doFilter(request, response);
             return; // 여기서 필터 종료 (검증 로직 안 탐)
         }
