@@ -63,8 +63,7 @@ public class KakaoService {
     /**
      * [2단계] 액세스 토큰으로 유저 정보 가져오기
      */
-    public String getUserInfo
-    (String accessToken) {
+    public String getUserInfo(String accessToken) {
         RestTemplate rt = new RestTemplate();
 
         // HTTP Header 생성
@@ -94,7 +93,9 @@ public class KakaoService {
     }
 
     public void saveUser(String userInfo) {
+
         try {
+            System.out.println("카카오 정보 =" + userInfo);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(userInfo);
             Long kakaoid = jsonNode.get("id").asLong();

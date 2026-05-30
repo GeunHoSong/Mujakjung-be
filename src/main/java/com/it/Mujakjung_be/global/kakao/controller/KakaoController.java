@@ -17,11 +17,11 @@ public class KakaoController {
 
     private final KakaoService service;
 
-    @GetMapping("/kakao")
-    public void kakaoCallback(@RequestParam(value = "code", required = false)String code
-    , HttpServletResponse response) throws IOException {
+    @GetMapping("/kakao/callback")
+    public void kakaoCallback(@RequestParam(value = "code", required = false) String code
+            , HttpServletResponse response) throws IOException {
         // 만약 인가 코드
-        if(code == null){
+        if (code == null) {
             System.out.println("인가 코드가 없습니다 메인으로 돌아 갑니다 ");
             response.sendRedirect("http://localhost:5173/");
             return;
@@ -34,12 +34,21 @@ public class KakaoController {
 
         // 3. DB 저장
         service.saveUser(userInfo);
-        String jwtToken  = service.createToken(userInfo);
-
+        String jwtToken = service.createToken(userInfo);
 
 
         // 4. ⭐ 직접 리다이렉트 시키기 (메인 화면으로!)
         // 따로 메서드 만들 필요 없이 response 객체가 가진 기능을 호출만 하면 돼.
         response.sendRedirect("http://localhost:5173/?token=" + jwtToken);
     }
+
+    @GetMapping("/kakao")
+    public void kakaoLogin(HttpServletResponse response) throws IOException {
+        String kakaoUrl = "http://kauth.kakao.com/auth/authorize"+ "?client_id=c20fa1e751278dc7d481f42f175401b2" + "&redirect_uri=http://localhost:8080/auth/kakao/callback"
+                + "&response_type=code";
+
+        response.sendRedirect(kakaoUrl);
+    }
 }
+
+
