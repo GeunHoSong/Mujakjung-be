@@ -24,7 +24,7 @@ public class AdminTravelController {
     // 싱품 정보 수정
     @PostMapping("/{id}")
     public ResponseEntity<TravelDTO> update(@PathVariable Long id ,@RequestBody TravelDTO dto){
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(service.);
     }
     // 상품 삭제
     @DeleteMapping("/{id}")

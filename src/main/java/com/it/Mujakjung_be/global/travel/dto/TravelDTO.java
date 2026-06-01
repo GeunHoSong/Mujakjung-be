@@ -11,6 +11,8 @@ public class TravelDTO {
     private String title;
     private String location;
     private String content;
+    private int price;
+
 
     // 기본 생성자 (jackson 라이브러리 json를 객체를 바꿀때 필요)
     public TravelDTO (){}
@@ -50,4 +52,15 @@ public class TravelDTO {
     public void setContent(String content) {
         this.content = content;
     }
+    public void setPrice(int price) {
+        this.price = price;
+    }
+    public void getContent(int price) {
+        this.price= price;
+    }
+
+
+
+
+
 }

@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface TravelRepository extends JpaRepository<TravelEntity , Long> {
     Optional<TravelEntity> findByTitle(String title);
+    Optional<TravelEntity> findById(Long id);
 }
