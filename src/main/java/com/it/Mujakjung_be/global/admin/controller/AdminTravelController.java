@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
@@ -28,5 +30,9 @@ public class AdminTravelController {
     @DeleteMapping("/{id}")
     public ResponseEntity<TravelDTO> delete (@PathVariable Long id ){
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/list")
+    public ResponseEntity<List<TravelDTO>> list(){
+        return ResponseEntity.ok(service.getAllTravels());
     }
 }

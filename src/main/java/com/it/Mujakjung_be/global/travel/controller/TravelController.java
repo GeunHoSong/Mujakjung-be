@@ -36,4 +36,5 @@ public class TravelController {
         TravelDTO travelDetail = service.getTravelDetail(id);
         return ResponseEntity.ok(travelDetail);
     }
+    // 서치
 }
