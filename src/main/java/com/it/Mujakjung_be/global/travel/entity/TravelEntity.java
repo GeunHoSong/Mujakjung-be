@@ -26,7 +26,11 @@ public class TravelEntity {
     private String imagePath; // 이미지 접근 경로
 
     @Column(updatable = false)
-    private LocalDateTime regDate; // 등록 날짜
+    private LocalDateTime regDate;// 등록 날짜
+
+
+    private int price;
+
 
 
     @PrePersist

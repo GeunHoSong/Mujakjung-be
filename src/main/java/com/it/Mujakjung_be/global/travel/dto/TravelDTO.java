@@ -1,5 +1,6 @@
 package com.it.Mujakjung_be.global.travel.dto;
 
+import com.it.Mujakjung_be.global.travel.entity.TravelEntity;
 import lombok.*;
 
 @Data
@@ -15,49 +16,17 @@ public class TravelDTO {
 
 
     // 기본 생성자 (jackson 라이브러리 json를 객체를 바꿀때 필요)
-    public TravelDTO (){}
-
-    public Long getId() {
-        return id;
+    public static TravelDTO fromEntity (TravelEntity travel){
+        TravelDTO dto = new TravelDTO();
+        dto.setId(travel.getId());
+        dto.setCategory(travel.getCategory());
+        dto.setTitle(travel.getTitle());
+        dto.setLocation(travel.getLocation());
+        dto.setContent(travel.getContent());
+        dto.setPrice(travel.getPrice());
+        return dto;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-    public void setPrice(int price) {
-        this.price = price;
-    }
-    public void getContent(int price) {
-        this.price= price;
-    }
 
 
 

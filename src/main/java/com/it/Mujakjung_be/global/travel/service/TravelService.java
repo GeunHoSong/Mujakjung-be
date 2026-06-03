@@ -6,7 +6,6 @@ import com.it.Mujakjung_be.global.travel.repository.TravelRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.it.Mujakjung_be.global.travel.entity.Travel;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,17 +60,21 @@ public class TravelService {
 
     @Transactional
     public TravelDTO updateTravel(Long id, TravelDTO dto) {
-        // 1. DTO가 아니라 엔티티(Travel)로 받아야 해!
-        Travel travel = repository.findById(id)
+        // 1. DB에서 실제 엔티티를 찾아서 가져옴 (TravelEntity 타입이어야 함)
+        TravelEntity travel = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("상품을 조회 할 수 없습니다: " + id));
 
-        // 2. 엔티티의 값을 DTO에서 가져온 새로운 값으로 변경
+        // 2. 가져온 엔티티의 값을 DTO에서 받은 새로운 값으로 변경 (Setter 사용)
         travel.setTitle(dto.getTitle());
         travel.setContent(dto.getContent());
         travel.setLocation(dto.getLocation());
         travel.setPrice(dto.getPrice());
 
+        // 이 시점에서 @Transactional 덕분에 '더티 체킹'이 일어나서
+        // 별도의 repository.save() 없이도 DB에 자동 업데이트됨!
+
         // 3. 수정된 엔티티를 다시 DTO로 변환해서 리턴
         return TravelDTO.fromEntity(travel);
     }
 }
+
