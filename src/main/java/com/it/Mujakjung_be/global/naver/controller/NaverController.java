@@ -2,6 +2,7 @@ package com.it.Mujakjung_be.global.naver.controller;
 
 import com.it.Mujakjung_be.global.naver.service.NaverService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,19 +23,28 @@ public class NaverController {
      * 1. 리액트 프론트에서 최초로 로그인 버튼 누를 때 요청하는 주소
      * 실제 주소: http://localhost:8080/auth/naver
      */
+
     @GetMapping("/auth/naver")
-    public void naverLogin(HttpServletResponse response) throws IOException {
+    public void naverLogin(
+            HttpServletResponse response,
+            HttpSession session) throws IOException {
+
         String clientId = "0mtzJI9Tavpqok3pG5Rw";
+        String redirectUri =
+                URLEncoder.encode(
+                        "http://localhost:8080/login/oauth2/code/naver",
+                        "UTF-8");
 
-        // 브라우저 주소창에 찍혔던 찐 범인 주소와 100% 일치하도록 설정!
-        // 💡 바로 여기에 주소를 박아 넣는 거야!
-        String redirectUri = URLEncoder.encode("http://localhost:8080/login/oauth2/code/naver", "UTF-8");
-        String state = "RANDOM_STATE";
+        String state = UUID.randomUUID().toString();
 
-        String apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code"
-                + "&client_id=" + clientId
-                + "&redirect_uri=" + redirectUri
-                + "&state=" + state;
+        // 추가
+        session.setAttribute("NAVER_STATE", state);
+
+        String apiURL =
+                "https://nid.naver.com/oauth2.0/authorize?response_type=code"
+                        + "&client_id=" + clientId
+                        + "&redirect_uri=" + redirectUri
+                        + "&state=" + state;
 
         response.sendRedirect(apiURL);
     }

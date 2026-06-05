@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 public class NaverUtil {
 
     private final String CLIENT_ID = "0mtzJI9Tavpqok3pG5Rw"; // 👈 컨트롤러와 동일한 ID
-    private final String CLIENT_SECRET = "T5A3eve1sR"; // 👈 네이버 개발자 센터에서 발급받은 Secret 입력!
+    private final String CLIENT_SECRET = "T5A3eve1sR"; // 👈 여기!
 
     /**
      * 1. 네이버로부터 인가 코드를 받아 Access Token을 요청하는 메서드
@@ -39,6 +39,7 @@ public class NaverUtil {
 
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(tokenUrl, request, String.class);
+            System.out.println("DEBUG: 네이버 토큰 응답 -> " + response.getBody() );
 
             // 1. 네이버 응답 본문을 읽어옴
             ObjectMapper objectMapper = new ObjectMapper();
@@ -72,6 +73,7 @@ public class NaverUtil {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         HttpEntity<String> request = new HttpEntity<>(headers);
+        System.out.println("DEBUG: 사용 하려는 Access Token 값 -> ["+accessToken+"]");
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(userInfoUrl, HttpMethod.GET, request, String.class);
