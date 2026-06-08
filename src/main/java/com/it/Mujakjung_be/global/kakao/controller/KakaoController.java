@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
@@ -39,23 +40,23 @@ public class KakaoController {
 
         // 4. ⭐ 직접 리다이렉트 시키기 (메인 화면으로!)
         // 따로 메서드 만들 필요 없이 response 객체가 가진 기능을 호출만 하면 돼.
-        response.sendRedirect("http://localhost:5173/?token=" + jwtToken);
+        response.sendRedirect("http://localhost:5173/login/oauth2/code/kakao?token=" + jwtToken);
     }
 
     @GetMapping("/kakao")
     public void kakaoLogin(HttpServletResponse response) throws IOException {
         String CLIENT_ID = "c20fa1e751278dc7d481f42f175401b2";
-        // 💡 1. 리다이렉트 URI를 명확하게 인코딩해서 넣어주는 게 가장 안전해!
         String redirectUri = "http://localhost:8080/auth/kakao/callback";
 
-        // 💡 2. 파라미터를 구분 기호(?와 &)를 사용하여 정확하게 조립
-        String kakaoUrl = "https://kauth.kakao.com/oauth/authorize"
-                + "?client_id=" + CLIENT_ID
-                + "&redirect_uri=" + redirectUri
-                + "&response_type=code";
+        // 💡 이게 바로 그 '유틸' 방식이야!
+        String kakaoUrl = UriComponentsBuilder.fromHttpUrl("https://kauth.kakao.com/oauth/authorize")
+                .queryParam("client_id", CLIENT_ID)
+                .queryParam("redirect_uri", redirectUri)
+                .queryParam("response_type", "code")
+                .build()
+                .toUriString();
 
-        System.out.println("=== [카카오] 호출 URL -> " + kakaoUrl);
+        System.out.println("=== [카카오] 유틸로 만든 URL -> " + kakaoUrl);
         response.sendRedirect(kakaoUrl);
     }
-
 }

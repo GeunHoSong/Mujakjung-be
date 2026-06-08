@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+
 public class NaverService {
 
     private final MemberRepository repository;
