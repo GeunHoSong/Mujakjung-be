@@ -1,4 +1,4 @@
-package com.it.Mujakjung_be.global.naver.util;
+package com.it.Mujakjung_be.global.member.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,9 +13,6 @@ import org.springframework.web.client.RestTemplate;
 public class NaverUtil {
 
     private final String CLIENT_ID = "0mtzJI9Tavpqok3pG5Rw";
-
-    // 🚨 [필독] 네이버 개발자 센터(내 애플리케이션 -> 개요)에서
-    // "Client Secret" 보기 버튼을 눌러서 '20자리' 문자열을 정확하게 다시 복사해서 붙여넣어줘!
     private final String CLIENT_SECRET = "T5A3eve1sR";
 
     /**
@@ -23,14 +20,11 @@ public class NaverUtil {
      */
     public String getAccessToken(String code, String state) {
         String tokenUrl = "https://nid.naver.com/oauth2.0/token";
-
         RestTemplate restTemplate = new RestTemplate();
 
-        // HTTP Header 설정
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        // HTTP Body 설정
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", CLIENT_ID);
@@ -42,22 +36,34 @@ public class NaverUtil {
 
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(tokenUrl, request, String.class);
-            System.out.println("DEBUG: 네이버 토큰 응답 -> " + response.getBody());
+            System.out.println("[NaverUtil DEBUG] 네이버 토큰 원본 응답 -> " + response.getBody());
 
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
 
-            if (jsonNode.has("access_token")) {
-                return jsonNode.get("access_token").asText();
-            } else {
-                String errorMsg = jsonNode.has("error_description") ?
-                        jsonNode.get("error_description").asText() : "알 수 없는 에러";
-                System.err.println("❌ 네이버 로그인 토큰 발급 실패! 원인: " + errorMsg);
-                return null;
+            // 💡 1. 네이버가 에러 응답을 주면 null을 주지 않고 즉시 예외를 발생시켜 흐름을 정지시킵니다.
+            if (jsonNode.has("error")) {
+                String error = jsonNode.get("error").asText();
+                String errorDesc = jsonNode.has("error_description") ? jsonNode.get("error_description").asText() : "";
+                throw new RuntimeException("네이버 인증 서버 에러: " + error + " (" + errorDesc + ")");
             }
 
+            // 💡 2. 정상적으로 토큰 필드가 있을 때만 검증 후 리턴합니다.
+            if (jsonNode.has("access_token")) {
+                String token = jsonNode.get("access_token").asText();
+
+                if (token == null || token.isEmpty() || token.equalsIgnoreCase("null")) {
+                    throw new RuntimeException("네이버가 준 토큰 값이 비어있거나 올바르지 않습니다.");
+                }
+
+                System.out.println("⭕ 정상 발급된 네이버 Access Token: " + token);
+                return token;
+            }
+
+            throw new RuntimeException("네이버 응답에 access_token 필드가 존재하지 않습니다.");
+
         } catch (Exception e) {
-            throw new RuntimeException("네이버 엑세스 토큰 통신 중 문제 발생", e);
+            throw new RuntimeException("네이버 엑세스 토큰 요청 중 오류 발생: " + e.getMessage(), e);
         }
     }
 
@@ -65,44 +71,41 @@ public class NaverUtil {
      * 2. 발급받은 Access Token을 가지고 네이버 유저 프로필 정보를 가져오는 메서드
      */
     public NaverDto getNaverUserInfo(String accessToken) {
-        String userInfoUrl = "https://openapi.naver.com/v1/nid/me";
+        // 💡 이제 이 안전장치는 앞 단계에서 100% 검증된 토큰만 넘어오므로 절대 터질 일이 없습니다!
+        if (accessToken == null || accessToken.isEmpty() || accessToken.equalsIgnoreCase("null")) {
+            throw new RuntimeException("유효한 Access Token이 없어서 네이버 프로필을 요청할 수 없습니다.");
+        }
 
+        String userInfoUrl = "https://openapi.naver.com/v1/nid/me";
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         HttpEntity<String> request = new HttpEntity<>(headers);
-        System.out.println("DEBUG: 사용 하려는 Access Token 값 -> [" + accessToken + "]");
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(userInfoUrl, HttpMethod.GET, request, String.class);
+            System.out.println("[NaverUtil DEBUG] 프로필 원본 응답 -> " + response.getBody());
 
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
 
-            // 네이버 응답에서 "response" 노드를 가져옵니다.
             JsonNode naverResponse = jsonNode.get("response");
-
             if (naverResponse == null) {
                 String errorMsg = jsonNode.has("message") ? jsonNode.get("message").asText() : "알 수 없는 에러";
-                System.err.println("❌ 네이버 프로필 가져오기 실패: " + errorMsg);
-                throw new RuntimeException("네이버 프로필 정보를 가져오는데 실패했습니다: " + errorMsg);
+                throw new RuntimeException("네이버 프로필 파싱 실패: " + errorMsg);
             }
 
-            // 1. 최상위 NaverDto 객체 생성
             NaverDto naverDto = new NaverDto();
             naverDto.setResultcode(jsonNode.has("resultcode") ? jsonNode.get("resultcode").asText() : null);
             naverDto.setMessage(jsonNode.has("message") ? jsonNode.get("message").asText() : null);
 
-            // 2. 계층형 이너 클래스인 Response 객체 생성 및 값 세팅 (★컴파일 에러 해결 지점!)
             NaverDto.Response responseObj = new NaverDto.Response();
             if (naverResponse.has("email")) responseObj.setEmail(naverResponse.get("email").asText());
             if (naverResponse.has("name")) responseObj.setName(naverResponse.get("name").asText());
             if (naverResponse.has("id")) responseObj.setId(naverResponse.get("id").asText());
 
-            // 3. NaverDto에 완성된 responseObj를 쏙 집어넣기
             naverDto.setResponse(responseObj);
-
             return naverDto;
 
         } catch (Exception e) {

@@ -44,11 +44,18 @@ public class KakaoController {
 
     @GetMapping("/kakao")
     public void kakaoLogin(HttpServletResponse response) throws IOException {
-        String kakaoUrl = "http://kauth.kakao.com/auth/authorize"+ "?client_id=c20fa1e751278dc7d481f42f175401b2" + "&redirect_uri=http://localhost:8080/auth/kakao/callback"
+        String CLIENT_ID = "c20fa1e751278dc7d481f42f175401b2";
+        // 💡 1. 리다이렉트 URI를 명확하게 인코딩해서 넣어주는 게 가장 안전해!
+        String redirectUri = "http://localhost:8080/auth/kakao/callback";
+
+        // 💡 2. 파라미터를 구분 기호(?와 &)를 사용하여 정확하게 조립
+        String kakaoUrl = "https://kauth.kakao.com/oauth/authorize"
+                + "?client_id=" + CLIENT_ID
+                + "&redirect_uri=" + redirectUri
                 + "&response_type=code";
 
+        System.out.println("=== [카카오] 호출 URL -> " + kakaoUrl);
         response.sendRedirect(kakaoUrl);
     }
+
 }
-
-

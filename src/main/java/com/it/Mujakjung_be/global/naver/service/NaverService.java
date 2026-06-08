@@ -4,8 +4,9 @@ import com.it.Mujakjung_be.global.member.entity.MemberEntity;
 import com.it.Mujakjung_be.global.member.entity.Role;
 import com.it.Mujakjung_be.global.member.repository.MemberRepository;
 import com.it.Mujakjung_be.global.member.util.JwtUtil;
+import com.it.Mujakjung_be.global.member.util.NaverUtil;
 import com.it.Mujakjung_be.global.naver.dto.NaverDto;
-import com.it.Mujakjung_be.global.naver.util.NaverUtil;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,9 +32,16 @@ public class NaverService {
         // 💡 껍데기(Response) 안에서 실제 유저 데이터 객체 안전하게 꺼내기
         NaverDto.Response naverProfile = naverUser.getResponse();
 
-        // 만약의 상황을 대비해 profile 자체가 null이거나 이메일이 null인지 검증
-        if (naverProfile == null || naverProfile.getEmail() == null) {
-            throw new IllegalArgumentException("네이버로부터 사용자 정보를 불러오지 못했습니다.");
+        if (naverProfile == null) {
+            throw new IllegalArgumentException("response가 null");
+        }
+
+        System.out.println("id = " + naverProfile.getId());
+        System.out.println("email = " + naverProfile.getEmail());
+        System.out.println("name = " + naverProfile.getName());
+
+        if (naverProfile.getEmail() == null) {
+            throw new IllegalArgumentException("email이 null");
         }
 
         // 3. DB에서 네이버 이메일로 가입된 기존 회원이 있는지 확인

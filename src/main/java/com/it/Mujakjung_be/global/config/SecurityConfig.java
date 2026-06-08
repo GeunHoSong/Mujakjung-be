@@ -87,15 +87,15 @@ public class SecurityConfig {
         return source;
     }
 
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer(){
-//        // 💡여기가 찐 범인 검거 장소! 네이버 콜백 주소들이 JwtFilter를 아예 타지 않도록 확실하게 추가해 줘야 해!
-//        return (web -> web.ignoring().requestMatchers(
-//                "/auth/kakao", "/auth/kakao/**",
-//                "/auth/naver", "/auth/naver/**",
-//                "/login/oauth2/code/naver",
-//                "/login/oauth2/code/naver/**",
-//                "favicon.ico", "/.well-known/**"
-//        ));
-//    }
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer(){
+        // 💡여기가 찐 범인 검거 장소! 네이버 콜백 주소들이 JwtFilter를 아예 타지 않도록 확실하게 추가해 줘야 해!
+        return (web -> web.ignoring().requestMatchers(
+                "/auth/kakao", "/auth/kakao/**",
+                "/auth/naver", "/auth/naver/**",
+                "/login/oauth2/code/naver",
+                "/login/oauth2/code/naver/**",
+                "favicon.ico", "/.well-known/**"
+        ));
+    }
 }
