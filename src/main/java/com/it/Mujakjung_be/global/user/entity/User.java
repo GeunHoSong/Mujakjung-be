@@ -15,6 +15,7 @@ public class User {
     private Long id;
 
     private Long kakaoId;
+    private Long NaverId;
 
 
 

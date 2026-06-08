@@ -33,37 +33,27 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // 1. 가장 먼저 CORS 설정 적용
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
+                // 2. 요청 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        // 💡 [여기 집중!] 카카오 콜백 주소와 파비콘을 filterChain 내부의 permitAll에 직접 등록!
-                        .requestMatchers(
-                                "/",
-                                "/api/member/join",
-                                "/api/member/login",
-                                "/api/health",
-                                "/auth/kakao/**",   // 👈 카카오 프리패스 주소 추가!
-                                "/auth/naver/**",
-                                "/login/oauth2/code/naver",
-                                "/login/oauth2/code/naver/**",
-                                "/favicon.ico" ,     // 👈 파비콘 프리패스 주소 추가!
-                                "/error"
-                        ).permitAll()
-
-                        .requestMatchers("/api/travels/**", "/api/search/**").permitAll()
+                        .requestMatchers("/", "/api/member/join", "/api/member/login", "/api/health",
+                                "/auth/kakao/**", "/auth/naver/**", "/login/oauth2/code/naver/**",
+                                "/favicon.ico", "/error", "/api/travels/**", "/api/search/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/member/**").hasAnyRole("USER", "ADMIN")
-
                         .anyRequest().authenticated()
                 )
                 .formLogin(f -> f.disable())
                 .httpBasic(b -> b.disable())
+
+                // 3. JwtFilter를 UsernamePasswordAuthenticationFilter 이전에 실행
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .exceptionHandling(ex -> ex
@@ -73,29 +63,37 @@ public class SecurityConfig {
 
         return http.build();
     }
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+
+        // 1. '*' 대신 구체적인 패턴을 사용하거나, 패턴 리스트를 명시해야 함
+        config.setAllowedOriginPatterns(Arrays.asList("http://localhost:5173"));
+
+        // 2. 허용할 메서드들
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("*"));
+
+        // 3. 헤더 설정 (Authorization은 토큰 때문에 반드시 필요)
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
+
+        // 4. 인증 정보(쿠키, 토큰 등) 허용
         config.setAllowCredentials(true);
 
+        // 5. 서버에 설정 등록
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer(){
-        // 💡여기가 찐 범인 검거 장소! 네이버 콜백 주소들이 JwtFilter를 아예 타지 않도록 확실하게 추가해 줘야 해!
-        return (web -> web.ignoring().requestMatchers(
-                "/auth/kakao", "/auth/kakao/**",
-                "/auth/naver", "/auth/naver/**",
-                "/login/oauth2/code/naver",
-                "/login/oauth2/code/naver/**",
-                "favicon.ico", "/.well-known/**"
-        ));
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer(){
+//        // 💡여기가 찐 범인 검거 장소! 네이버 콜백 주소들이 JwtFilter를 아예 타지 않도록 확실하게 추가해 줘야 해!
+//        return (web -> web.ignoring().requestMatchers(
+//                "/auth/kakao", "/auth/kakao/**",
+//                "/auth/naver", "/auth/naver/**",
+//                "/login/oauth2/code/naver",
+//                "/login/oauth2/code/naver/**",
+//                "favicon.ico", "/.well-known/**"
+//        ));
+//    }
 }

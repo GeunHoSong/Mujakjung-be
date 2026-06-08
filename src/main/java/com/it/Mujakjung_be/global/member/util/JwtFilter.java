@@ -29,13 +29,18 @@ public class JwtFilter extends OncePerRequestFilter {
     }
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        String path = request.getRequestURI();
-        if (path.startsWith("/auth/kakao")) {
+        // 💡 이 로직이 없으면 브라우저는 CORS 에러를 뿜게 돼!
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             filterChain.doFilter(request, response);
             return;
         }
 
+        // 2. 인증이 필요 없는 경로 통합 관리
+        String path = request.getRequestURI();
+        if (path.startsWith("/auth/") || path.startsWith("/api/member/login") || path.startsWith("/api/member/join")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         String authorization = request.getHeader("Authorization");
 
         try {
