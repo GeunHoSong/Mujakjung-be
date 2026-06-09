@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -106,5 +107,11 @@ public class MemberService {
                 m.getRole().name(),
                 ""
         )).toList();
+    }
+
+    public List<MemberResponse> finllAll(){
+        List<MemberEntity> members  = repository.findAll();
+
+        return members.stream().map(MemberResponse::new).collect(Collectors.toList());
     }
 }

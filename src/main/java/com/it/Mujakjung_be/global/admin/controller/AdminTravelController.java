@@ -1,5 +1,7 @@
 package com.it.Mujakjung_be.global.admin.controller;
 
+import com.it.Mujakjung_be.global.member.dto.MemberResponse;
+import com.it.Mujakjung_be.global.member.service.MemberService;
 import com.it.Mujakjung_be.global.travel.dto.TravelDTO;
 import com.it.Mujakjung_be.global.travel.service.TravelService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.List;
 public class AdminTravelController {
 
     private final TravelService service;
+    private final MemberService memberService;
 
     @PostMapping("/register") // 👈 최종 주소: /api/admin/travels/register
     public ResponseEntity<TravelDTO> register(@RequestBody TravelDTO dto) {
@@ -35,5 +38,10 @@ public class AdminTravelController {
     @GetMapping("/list")
     public ResponseEntity<List<TravelDTO>> list(){
         return ResponseEntity.ok(service.getAllTravels());
+    }
+
+    @GetMapping("/members")
+    public ResponseEntity<List<MemberResponse>> getMemberList(){
+        return ResponseEntity.ok(memberService.finllAll());
     }
 }
