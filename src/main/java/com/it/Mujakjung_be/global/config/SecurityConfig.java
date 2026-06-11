@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/api/member/join", "/api/member/login", "/api/health",
                                 "/auth/kakao/**", "/auth/naver/**", "/login/oauth2/code/naver/**",
-                                "/favicon.ico", "/error", "/api/travels/**", "/api/search/**").permitAll()
+                                "/favicon.ico", "/error", "/api/travels/**", "/api/search/**", "/api/board/**").permitAll()
                         .requestMatchers("/api/admin/**", "/api/notice/save").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/api/member/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()

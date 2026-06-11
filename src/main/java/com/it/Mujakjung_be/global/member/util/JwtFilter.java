@@ -37,7 +37,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // 2. 인증이 필요 없는 경로 통합 관리
         String path = request.getRequestURI();
-        if (path.startsWith("/auth/") || path.startsWith("/api/member/login") || path.startsWith("/api/member/join")) {
+        // 이 부분에서 path.startsWith("/api/board/") 를 추가하는 거야!
+        if (path.startsWith("/auth/") ||
+                path.startsWith("/api/member/login") ||
+                path.startsWith("/api/member/join") ||
+                path.startsWith("/api/board/")) { // <--- 여기를 이렇게 추가해!
             filterChain.doFilter(request, response);
             return;
         }
