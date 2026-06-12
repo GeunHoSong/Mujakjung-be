@@ -2,12 +2,11 @@ package com.it.Mujakjung_be.global.config;
 
 import com.it.Mujakjung_be.global.member.util.JwtFilter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod; // HttpMethod 사용을 위해 추가
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +21,6 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@Slf4j
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
@@ -33,67 +31,55 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // 1. 가장 먼저 CORS 설정 적용
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(csrf -> csrf.disable()) // API 서버이므로 CSRF 비활성화
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // JWT 사용을 위한 세션 비활성화
 
-                // 2. 요청 권한 설정
                 .authorizeHttpRequests(auth -> auth
+                        // 1. [완전 공개] 로그인 없이 누구나 접근 가능
                         .requestMatchers("/", "/api/member/join", "/api/member/login", "/api/health",
                                 "/auth/kakao/**", "/auth/naver/**", "/login/oauth2/code/naver/**",
-                                "/favicon.ico", "/error", "/api/travels/**", "/api/search/**", "/api/board/**").permitAll()
-                        .requestMatchers("/api/admin/**", "/api/notice/save").hasAuthority("ROLE_ADMIN")
+                                "/favicon.ico", "/error", "/api/travels/**", "/api/search/**").permitAll()
+
+                        // 2. [게시판 조회만] 로그인이 필요 없는 읽기 전용
+                        .requestMatchers(HttpMethod.GET, "/api/board/**").permitAll()
+
+                        // 3. [게시판 작성/수정/삭제] 로그인 필수
+                        .requestMatchers("/api/board/**").authenticated()
+
+                        // 4. [관리자 전용] 공지사항 관련 모든 작업 및 관리자 API
+                        .requestMatchers("/api/admin/**", "/api/notice/save", "/api/notice/update/**", "/api/notice/delete/**").hasAuthority("ROLE_ADMIN")
+
+                        // 5. [회원 전용] 로그인한 사용자 접근 가능
                         .requestMatchers("/api/member/**").hasAnyRole("USER", "ADMIN")
+
+                        // 6. 나머지 모든 요청은 로그인 필요
                         .anyRequest().authenticated()
                 )
                 .formLogin(f -> f.disable())
                 .httpBasic(b -> b.disable())
-
-                // 3. JwtFilter를 UsernamePasswordAuthenticationFilter 이전에 실행
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // JWT 인증 필터 적용
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(unauthorizedHandler)
-                        .accessDeniedHandler(accessDeniedHandler)
+                        .authenticationEntryPoint(unauthorizedHandler) // 로그인 안 된 경우 처리
+                        .accessDeniedHandler(accessDeniedHandler)     // 권한 없는 경우 처리
                 );
 
         return http.build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-
-        // 1. '*' 대신 구체적인 패턴을 사용하거나, 패턴 리스트를 명시해야 함
         config.setAllowedOriginPatterns(Arrays.asList("http://localhost:5173"));
-
-        // 2. 허용할 메서드들
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
-        // 3. 헤더 설정 (Authorization은 토큰 때문에 반드시 필요)
         config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
-
-        // 4. 인증 정보(쿠키, 토큰 등) 허용
         config.setAllowCredentials(true);
-
-        // 5. 서버에 설정 등록
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-
         return source;
     }
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer(){
-//        // 💡여기가 찐 범인 검거 장소! 네이버 콜백 주소들이 JwtFilter를 아예 타지 않도록 확실하게 추가해 줘야 해!
-//        return (web -> web.ignoring().requestMatchers(
-//                "/auth/kakao", "/auth/kakao/**",
-//                "/auth/naver", "/auth/naver/**",
-//                "/login/oauth2/code/naver",
-//                "/login/oauth2/code/naver/**",
-//                "favicon.ico", "/.well-known/**"
-//        ));
-//    }
 }

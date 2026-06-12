@@ -23,8 +23,8 @@ public class BoardController {
     public ResponseEntity<List<BoardDto>> list(){
         return ResponseEntity.ok(service.findAll());
     }
-    @DeleteMapping("/delete/{id}") // 💡 경로는 '/api/board/delete/{id}'가 됩니다.
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<BoardDto> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.ok().build();
     }
