@@ -46,7 +46,7 @@ public class SecurityConfig {
                                 "/favicon.ico", "/error", "/api/travels/**", "/api/search/**").permitAll()
 
                         // 2. [게시판 조회만] 로그인이 필요 없는 읽기 전용
-                        .requestMatchers(HttpMethod.GET, "/api/board/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/board/**", "/api/notice/list").permitAll()
 
                         // 3. [게시판 작성/수정/삭제] 로그인 필수
                         .requestMatchers("/api/board/**").authenticated()
