@@ -4,7 +4,7 @@ import com.it.Mujakjung_be.global.member.util.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod; // HttpMethod 사용을 위해 추가
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -36,36 +36,36 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable()) // API 서버이므로 CSRF 비활성화
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // JWT 사용을 위한 세션 비활성화
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
-                        // 1. [완전 공개] 로그인 없이 누구나 접근 가능
+                        // 1. [공개 API] 누구나 접근 가능
                         .requestMatchers("/", "/api/member/join", "/api/member/login", "/api/health",
                                 "/auth/kakao/**", "/auth/naver/**", "/login/oauth2/code/naver/**",
                                 "/favicon.ico", "/error", "/api/travels/**", "/api/search/**").permitAll()
 
-                        // 2. [게시판 조회만] 로그인이 필요 없는 읽기 전용
+                        // 2. [조회 전용] 게시판과 공지사항 목록은 로그인 없이 가능
                         .requestMatchers(HttpMethod.GET, "/api/board/**", "/api/notice/list").permitAll()
 
-                        // 3. [게시판 작성/수정/삭제] 로그인 필수
-                        .requestMatchers("/api/board/**").authenticated()
-
-                        // 4. [관리자 전용] 공지사항 관련 모든 작업 및 관리자 API
+                        // 3. [관리자 권한] 공지사항 쓰기/수정/삭제 (이 규칙이 먼저 와야 인증/인가가 제대로 작동함)
                         .requestMatchers("/api/admin/**", "/api/notice/save", "/api/notice/update/**", "/api/notice/delete/**").hasAuthority("ROLE_ADMIN")
 
-                        // 5. [회원 전용] 로그인한 사용자 접근 가능
+                        // 4. [로그인 필수] 게시판 글쓰기 등 (나머지 게시판 기능)
+                        .requestMatchers("/api/board/**").authenticated()
+
+                        // 5. [회원 전용]
                         .requestMatchers("/api/member/**").hasAnyRole("USER", "ADMIN")
 
-                        // 6. 나머지 모든 요청은 로그인 필요
+                        // 6. 나머지 모든 요청
                         .anyRequest().authenticated()
                 )
                 .formLogin(f -> f.disable())
                 .httpBasic(b -> b.disable())
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // JWT 인증 필터 적용
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(unauthorizedHandler) // 로그인 안 된 경우 처리
-                        .accessDeniedHandler(accessDeniedHandler)     // 권한 없는 경우 처리
+                        .authenticationEntryPoint(unauthorizedHandler)
+                        .accessDeniedHandler(accessDeniedHandler)
                 );
 
         return http.build();
