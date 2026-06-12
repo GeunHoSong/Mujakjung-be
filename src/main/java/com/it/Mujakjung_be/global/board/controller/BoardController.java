@@ -1,3 +1,4 @@
+package com.it.Mujakjung_be.global.board.controller;
 import com.it.Mujakjung_be.global.board.dto.BoardDto;
 import com.it.Mujakjung_be.global.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,17 @@ public class BoardController {
     public ResponseEntity<List<BoardDto>> list(){
         return ResponseEntity.ok(service.findAll());
     }
-    @DeleteMapping("/delete/id")
-    public ResponseEntity<BoardDto> delete(@PathVariable Long id) {
+    @DeleteMapping("/delete/{id}") // 💡 경로는 '/api/board/delete/{id}'가 됩니다.
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.ok().build();
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<BoardDto> detail(@PathVariable Long id){
+        return ResponseEntity.ok(service.findById(id));
+    }
+    @PutMapping("/{id}")
+    public Long update(@PathVariable Long id , @RequestBody BoardDto dto) {
+        return service.update(id, dto);
     }
 }
