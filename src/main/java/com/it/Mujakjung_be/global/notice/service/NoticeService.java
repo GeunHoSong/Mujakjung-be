@@ -39,7 +39,7 @@ public class NoticeService {
 
     }
     @Transactional
-    public void deteleById(Long id) {
+    public void deleteById(Long id) { // detele를 delete로!
         Notice notice = repository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 공지 사항이 없습니다" + id) );
         repository.delete(notice);
     }

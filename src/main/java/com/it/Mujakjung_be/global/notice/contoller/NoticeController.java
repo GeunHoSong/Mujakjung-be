@@ -37,7 +37,7 @@ public class NoticeController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
-        service.deteleById(id);
+        service.deleteById(id); // 여기도 deleteById로 변경!
         return ResponseEntity.ok("삭제 성공");
     }
 }

@@ -6,6 +6,8 @@ naver:
   client-id:  0mtzJI9Tavpqok3pG5Rw
   client-secret: T5A3eve1sR
   redirect-uri: http://localhost:8080/login/oauth2/code/naver
+gemini:
+  api-key: "AIzaSyDe0hyTvo8tFkmPtw9GtjfW5C4x3C1LKFE"
 # =========================================
 # 🌐 서버 설정
 # =========================================
