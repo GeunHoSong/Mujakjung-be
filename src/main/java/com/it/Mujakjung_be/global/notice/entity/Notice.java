@@ -25,4 +25,9 @@ public class Notice {
 
     @CreationTimestamp
     private LocalDateTime regDate;
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
