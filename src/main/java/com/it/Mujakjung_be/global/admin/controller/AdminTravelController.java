@@ -7,6 +7,7 @@ import com.it.Mujakjung_be.global.travel.service.TravelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,8 +27,13 @@ public class AdminTravelController {
 
     // 싱품 정보 수정
     @PostMapping("/{id}")
-    public ResponseEntity<TravelDTO> update(@PathVariable Long id ,@RequestBody TravelDTO dto){
-        TravelDTO updatedto =  service.updateTravel(id, dto);
+    public ResponseEntity<TravelDTO> update(
+            @PathVariable Long id,
+            @ModelAttribute TravelDTO dto, // @RequestBody를 @ModelAttribute로 바꿔야 함
+            @RequestParam(value = "file", required = false) MultipartFile file) { // 파일 추가
+
+        // 이제 서비스에서 파일(file)과 데이터(dto)를 같이 처리할 수 있게 됨
+        TravelDTO updatedto = service.updateTravel(id, dto, file);
         return ResponseEntity.ok(updatedto);
     }
     // 상품 삭제
