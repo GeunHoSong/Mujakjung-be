@@ -45,13 +45,13 @@ public class SecurityConfig {
                                 "/auth/kakao/**", "/auth/naver/**", "/login/oauth2/code/naver/**",
                                 "/favicon.ico", "/error", "/api/travels/**", "/api/search/**").permitAll()
 
-                        // 2. [조회 전용] 게시판과 공지사항 목록은 로그인 없이 가능
-                        .requestMatchers(HttpMethod.GET, "/api/board/**", "/api/notice/list").permitAll()
+                        // 2. [수정됨] 게시판과 공지사항 조회(목록+상세)는 로그인 없이 가능
+                        .requestMatchers(HttpMethod.GET, "/api/board/**", "/api/notice/**").permitAll()
 
-                        // 3. [관리자 권한] 공지사항 쓰기/수정/삭제 (이 규칙이 먼저 와야 인증/인가가 제대로 작동함)
+                        // 3. [관리자 권한] 공지사항 쓰기/수정/삭제
                         .requestMatchers("/api/admin/**", "/api/notice/save", "/api/notice/update/**", "/api/notice/delete/**").hasAuthority("ROLE_ADMIN")
 
-                        // 4. [로그인 필수] 게시판 글쓰기 등 (나머지 게시판 기능)
+                        // 4. [로그인 필수] 게시판 글쓰기 등
                         .requestMatchers("/api/board/**").authenticated()
 
                         // 5. [회원 전용]
