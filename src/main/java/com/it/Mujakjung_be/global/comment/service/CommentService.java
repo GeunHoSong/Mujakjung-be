@@ -15,9 +15,12 @@ public class CommentService {
 
     private final CommentRepository repository;
 
-    // 댓글 조회
-    public List<CommentEntity> getComment(Long boardId){
-        return repository.findByBoardIdOrderByRegDateDesc(boardId).stream().map(BoardDto::new).toList();
+    // CommentService.java
+    public List<CommentEntity> getComment(Long boardId) {
+        return repository.findByBoardIdOrderByRegDateDesc(boardId); // map(BoardDto::new) 삭제
+    }
 
+    public void saveComment(CommentEntity comment) {
+        repository.save(comment);
     }
 }
