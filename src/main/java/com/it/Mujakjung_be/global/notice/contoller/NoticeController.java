@@ -4,6 +4,7 @@ import com.it.Mujakjung_be.global.notice.dto.NoticeDto;
 import com.it.Mujakjung_be.global.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,12 +15,29 @@ import java.util.List;
 public class NoticeController {
 
     private final NoticeService service;
+
     @PostMapping("/save")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // 👈 관리자만 실행 가능
     public ResponseEntity<String> save(@RequestBody NoticeDto dto){
         service.saveNotice(dto);
         return ResponseEntity.ok("등록 성공");
     }
 
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // 👈 관리자만 실행 가능
+    public ResponseEntity<String> update(@PathVariable Long id , @RequestBody NoticeDto dto){
+        service.updateNotice(id , dto);
+        return ResponseEntity.ok("수정 완료");
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") // 👈 관리자만 실행 가능
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        service.deleteById(id);
+        return ResponseEntity.ok("삭제 성공");
+    }
+
+    // 조회 메서드들은 @PreAuthorize가 없으므로 누구나 접근 가능!
     @GetMapping("/list")
     public ResponseEntity<List<NoticeDto>> list(){
         return ResponseEntity.ok(service.findAll());
@@ -27,17 +45,8 @@ public class NoticeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<NoticeDto> detail(@PathVariable Long id){
-        return ResponseEntity.ok(service.findById(id));
-    }
-    @PutMapping("/update/{id}")
-    public ResponseEntity<String> update(@PathVariable Long id , @RequestBody NoticeDto dto){
-        service.updateNotice(id , dto);
-        return ResponseEntity.ok("수정 완료");
-    }
+        NoticeDto noticeDto = service.findById(id);
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
-        service.deleteById(id); // 여기도 deleteById로 변경!
-        return ResponseEntity.ok("삭제 성공");
+        return ResponseEntity.ok(noticeDto);
     }
 }
