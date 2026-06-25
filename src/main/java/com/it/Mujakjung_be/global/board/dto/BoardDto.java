@@ -2,7 +2,7 @@ package com.it.Mujakjung_be.global.board.dto;
 
 import com.it.Mujakjung_be.global.board.entity.BoardEntity;
 import lombok.*;
-
+import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 @NoArgsConstructor
@@ -11,16 +11,19 @@ import lombok.*;
 public class BoardDto {
     private Long id;
     private String title;
-    private String writer;
+    private String writer; // 👈 작성자 필드 확인
     private String content;
     private String regDate;
+    private MultipartFile file;
 
-    // 1. 엔티티를 DTO로 변환할 때 쓰는 생성자
-    public BoardDto(BoardEntity entity) {
-        this.id = entity.getId();
-        this.title = entity.getTitle();
-        this.content = entity.getContent();
-        this.writer = entity.getWriter();
-        this.regDate = entity.getRegDate() != null ? entity.getRegDate().toString() : "";
+    // Entity -> DTO 변환 시 작성자(writer)를 반드시 포함합니다.
+    public static BoardDto fromEntity(BoardEntity entity) {
+        return BoardDto.builder()
+                .id(entity.getId())
+                .title(entity.getTitle())
+                .writer(entity.getWriter()) // 여기서 writer가 들어가고 있는지 디버깅 필요!
+                .content(entity.getContent())
+                .regDate(entity.getRegDate() != null ? entity.getRegDate().toString() : "")
+                .build();
     }
-} // 💡 중괄호를 여기까지만 유지해야 해!
+}

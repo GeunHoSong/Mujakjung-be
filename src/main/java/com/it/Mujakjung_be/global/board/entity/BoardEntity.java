@@ -22,15 +22,20 @@ public class BoardEntity {
 
     private LocalDateTime regDate;
 
+    private String fileName;
+    private String filePath;
+
 
 
     @Builder
-    public BoardEntity(Long id, String title, String content, String writer) {
+    public BoardEntity(Long id, String title, String content, String writer ,String fileName, String filePath) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.regDate = LocalDateTime.now();
+        this.fileName = fileName;
+        this.filePath = filePath;
     }
 
 

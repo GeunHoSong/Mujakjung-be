@@ -40,24 +40,25 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
-                        // 1. [공개 API] 누구나 접근 가능
+                        // 1. [공개] 누구나 접근 가능
                         .requestMatchers("/", "/api/member/join", "/api/member/login", "/api/health",
-                                "/auth/kakao/**", "/auth/naver/**", "/login/oauth2/code/naver/**",
-                                "/favicon.ico", "/error", "/api/travels/**", "/api/search/**").permitAll()
+                                "/auth/kakao/**", "/api/travels/**", "/api/search/**").permitAll()
 
-                        // 2. [수정됨] 게시판과 공지사항 조회(목록+상세)는 로그인 없이 가능
+                        // 2. [조회] 게시판 및 공지사항 목록 조회는 누구나 가능
                         .requestMatchers(HttpMethod.GET, "/api/board/**", "/api/notice/**").permitAll()
 
-                        // 3. [관리자 권한] 공지사항 쓰기/수정/삭제
-                        .requestMatchers("/api/admin/**", "/api/notice/save", "/api/notice/update/**", "/api/notice/delete/**").hasAuthority("ROLE_ADMIN")
+                        // 3. [관리자] 공지사항 관련 작업 (등록/수정/삭제) - ROLE_ADMIN만 가능
+                        .requestMatchers(HttpMethod.POST, "/api/notice/save").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/notice/update/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/notice/delete/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
 
-                        // 4. [로그인 필수] 게시판 글쓰기 등
-                        .requestMatchers("/api/board/**").authenticated()
+                        // 4. [회원] 일반 게시판 글쓰기/수정/삭제는 인증된 회원만 가능
+                        .requestMatchers(HttpMethod.POST, "/api/board/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/board/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/board/**").authenticated()
 
-                        // 5. [회원 전용]
-                        .requestMatchers("/api/member/**").hasAnyRole("USER", "ADMIN")
-
-                        // 6. 나머지 모든 요청
+                        // 5. 기타 나머지 모든 요청은 인증 필요
                         .anyRequest().authenticated()
                 )
                 .formLogin(f -> f.disable())

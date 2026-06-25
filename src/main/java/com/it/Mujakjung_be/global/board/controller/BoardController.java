@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -15,7 +16,7 @@ public class BoardController {
 
     @PostMapping("/save")
     // @RequestParam 대신 @ModelAttribute를 사용해야 formData를 객체로 받을 수 있어!
-    public ResponseEntity<BoardDto> save(@ModelAttribute BoardDto dto){
+    public ResponseEntity<BoardDto> save(@ModelAttribute BoardDto dto) throws IOException {
         return ResponseEntity.ok(service.write(dto));
     }
 
