@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 1. [공개] 누구나 접근 가능
                         .requestMatchers("/", "/api/member/join", "/api/member/login", "/api/health",
-                                "/auth/kakao/**", "/api/travels/**", "/api/search/**", "/api/comment/**").permitAll()
+                                "/auth/kakao/**", "/api/travels/**", "/api/search/**", "/api/comment/**", "/api/member/mypage/**", "/error").permitAll()
 
                         // 2. [조회] 게시판 및 공지사항 목록 조회는 누구나 가능
                         .requestMatchers(HttpMethod.GET, "/api/board/**", "/api/notice/**").permitAll()

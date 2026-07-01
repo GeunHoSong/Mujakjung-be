@@ -102,4 +102,15 @@ public class JwtUtil {
                 .getPayload();
     }
 
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser()
+                    .verifyWith(secretKey) // 서명 검증
+                    .build()
+                    .parseSignedClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false; // 만료되었거나 위조된 토큰
+        }
+    }
 }
