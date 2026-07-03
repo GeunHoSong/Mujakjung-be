@@ -6,7 +6,4 @@ public class MyPageDto {
     private String email;
     private String nickname;
     private String bio;
-
-
-
 }
