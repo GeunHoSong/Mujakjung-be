@@ -16,7 +16,7 @@ public class MyPageService {
     private final MemberRepository memberRepository;
 
     public MyPageDto getMypage(Long memberId) {
-        return repository.findByMemberId_Id(memberId)
+        return repository.findByMemberId(memberId)
                 .map(entity -> {
                     MyPageDto dto = new MyPageDto();
                     dto.setEmail(entity.getEmail());
@@ -31,12 +31,13 @@ public class MyPageService {
                     return emptyDto;
                 });
     }
+    @Transactional
+    public void updateMypage(Long id, MyPageDto dto) {
+        // 1. 로그인한 이메일로 엔티티를 찾음
+        MyPageEntity m = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("마이페이지가 존재하지 않습니다."));
 
-    public void updateMypage(Long id , MyPageDto  dto) {
-        MyPageEntity  m = repository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 마이페이페이지 없습니다"));
-
-        // 엔티티에 만들어둔 update 매서드 호출
+        // 2. 업데이트
         m.update(dto.getNickname(), dto.getBio());
-        // / @Transactional 때문에 별도의 save() 없이도 자동으로 DB에 반영돼!
     }
 }

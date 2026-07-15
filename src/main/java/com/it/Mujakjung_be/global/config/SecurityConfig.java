@@ -45,7 +45,7 @@ public class SecurityConfig {
                         // 1. [공개] 누구나 접근 가능
                         .requestMatchers("/", "/api/member/join", "/api/member/login", "/api/health",
                                 "/auth/kakao/**", "/api/travels/**", "/api/search/**", "/api/comment/**",
-                                "/api/mypage/**", // [수정] 이 경로를 추가/변경해줘
+                                 // [수정] 이 경로를 추가/변경해줘
                                 "/error").permitAll()
 
                         // 2. [조회] 게시판 및 공지사항 목록 조회는 누구나 가능
@@ -61,6 +61,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/board/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/board/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/board/**").authenticated()
+                        .requestMatchers("/api/mypage/**").authenticated()
 
                         // 5. 기타 나머지 모든 요청은 인증 필요
                         .anyRequest().authenticated()

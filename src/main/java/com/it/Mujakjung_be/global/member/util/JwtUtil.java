@@ -3,12 +3,14 @@ package com.it.Mujakjung_be.global.member.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JwtUtil {
 
@@ -105,12 +107,19 @@ public class JwtUtil {
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                    .verifyWith(secretKey) // 서명 검증
+                    .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token);
             return true;
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            log.error("▶ [JwtUtil] 토큰이 만료되었습니다: {}", e.getMessage());
+            return false;
+        } catch (io.jsonwebtoken.security.SignatureException e) {
+            log.error("▶ [JwtUtil] 서명이 일치하지 않습니다 (키가 달라요!): {}", e.getMessage());
+            return false;
         } catch (Exception e) {
-            return false; // 만료되었거나 위조된 토큰
+            log.error("▶ [JwtUtil] 토큰 검증 중 알 수 없는 에러: {}", e.getMessage());
+            return false;
         }
     }
 }
