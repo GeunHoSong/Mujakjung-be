@@ -23,7 +23,11 @@ public class MyPageService {
             dto.setBio(entity.getBio());
             return dto;
         })
-                .orElseThrow(()->  new IllegalArgumentException("마이페이지 가 존재 하지 않습니다 "));
+                .orElseGet(() -> {
+                    // 마이페이지가 없다면, 빈 DTO를 반환하거나
+                    // 아예 여기서 엔티티를 새로 생성해서 저장하고 반환하는 로직을 넣을 수 있어.
+                    return new MyPageDto();
+                });
 
 
     }
