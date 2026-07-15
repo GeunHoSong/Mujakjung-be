@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.lang.reflect.Member;
+
 @Entity
 @Getter
 @Table(name = "mypage")
@@ -17,5 +19,15 @@ public class MyPageEntity {
     private String email;
     private String nickname;
     private String bio;
+
+    @OneToOne
+    @JoinColumn(name = "member_id")
+
+    private Member  member;
+
+    public void update(String nickname, String bio){
+        this.nickname = nickname;
+        this.bio  = bio;
+    }
 
 }

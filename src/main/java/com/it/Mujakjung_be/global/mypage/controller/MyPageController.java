@@ -21,6 +21,12 @@ public class MyPageController {
         return ResponseEntity.ok(mypage);
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateMypage(@PathVariable Long id , @RequestBody MyPageDto dto){
+        service.updateMypage(id, dto);
+        return ResponseEntity.ok("수정 성공");
+    }
+
 
 
 }
