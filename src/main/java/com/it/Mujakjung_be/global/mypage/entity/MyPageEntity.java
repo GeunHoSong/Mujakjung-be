@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.lang.reflect.Member;
+import com.it.Mujakjung_be.global.member.entity.MemberEntity;
 
 @Entity
 @Getter
@@ -22,8 +22,7 @@ public class MyPageEntity {
 
     @OneToOne
     @JoinColumn(name = "member_id")
-
-    private Member  member;
+    private MemberEntity member;
 
     public void update(String nickname, String bio){
         this.nickname = nickname;

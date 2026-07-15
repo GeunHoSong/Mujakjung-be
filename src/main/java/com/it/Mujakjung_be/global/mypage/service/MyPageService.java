@@ -16,13 +16,15 @@ public class MyPageService {
     private final MemberRepository memberRepository;
 
     public MyPageDto getMypage(Long memberId){
-        MyPageEntity entity = repository.findByMemberId(memberId).orElseThrow(()-> new IllegalArgumentException("해당 마이 패이지 가 없습니다"));
-        MyPageDto  dto = new MyPageDto();
+        return  repository.findByMemberId(memberId).map(entity -> {
+            MyPageDto dto = new MyPageDto();
+            dto.setEmail(entity.getEmail());
+            dto.setNickname(entity.getNickname());
+            dto.setBio(entity.getBio());
+            return dto;
+        })
+                .orElseThrow(()->  new IllegalArgumentException("마이페이지 가 존재 하지 않습니다 "));
 
-        dto.setEmail(entity.getEmail());
-        dto.setNickname(entity.getNickname());
-        dto.setBio(entity.getBio());
-        return dto;
 
     }
 
