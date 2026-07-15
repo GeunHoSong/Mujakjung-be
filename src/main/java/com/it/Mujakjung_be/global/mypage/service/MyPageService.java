@@ -15,25 +15,25 @@ public class MyPageService {
     private final MyPageRepository repository;
     private final MemberRepository memberRepository;
 
-    public MyPageDto getMypage(Long memberId){
-        return  repository.findByMemberId(memberId).map(entity -> {
-            MyPageDto dto = new MyPageDto();
-            dto.setEmail(entity.getEmail());
-            dto.setNickname(entity.getNickname());
-            dto.setBio(entity.getBio());
-            return dto;
-        })
+    public MyPageDto getMypage(Long memberId) {
+        return repository.findByMemberId_Id(memberId)
+                .map(entity -> {
+                    MyPageDto dto = new MyPageDto();
+                    dto.setEmail(entity.getEmail());
+                    dto.setNickname(entity.getNickname());
+                    dto.setBio(entity.getBio());
+                    return dto;
+                })
                 .orElseGet(() -> {
-                    // 마이페이지가 없다면, 빈 DTO를 반환하거나
-                    // 아예 여기서 엔티티를 새로 생성해서 저장하고 반환하는 로직을 넣을 수 있어.
-                    return new MyPageDto();
+                    // 마이페이지가 없는 회원을 위해 기본 DTO 반환
+                    MyPageDto emptyDto = new MyPageDto();
+                    emptyDto.setNickname("닉네임을 설정해주세요");
+                    return emptyDto;
                 });
-
-
     }
 
     public void updateMypage(Long id , MyPageDto  dto) {
-        MyPageEntity  m = repository.findByMemberId(id).orElseThrow(()-> new IllegalArgumentException("해당 마이페이페이지 없습니다"));
+        MyPageEntity  m = repository.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 마이페이페이지 없습니다"));
 
         // 엔티티에 만들어둔 update 매서드 호출
         m.update(dto.getNickname(), dto.getBio());

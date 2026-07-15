@@ -7,15 +7,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig  implements WebMvcConfigurer {
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry){
-        registry.addResourceHandler("/image/**").addResourceLocations("file:///C:/uploads/");
-
+        @Override
+        public void addCorsMappings(CorsRegistry registry) {
+            registry.addMapping("/**")
+                    .allowedOrigins("http://localhost:5173") // 프론트엔드 주소
+                    .allowedMethods("GET", "POST", "PUT", "DELETE");
+        }
     }
 
 
-}
 
 
 

@@ -22,7 +22,7 @@ public class MyPageEntity {
 
     @OneToOne
     @JoinColumn(name = "member_id")
-    private MemberEntity member;
+    private MemberEntity memberId;
 
     public void update(String nickname, String bio){
         this.nickname = nickname;

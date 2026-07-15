@@ -36,7 +36,7 @@ spring:
     # - 3361      : MySQL 포트 (Docker 포트 매핑일 가능성 높음)
     # - mujakjung : 사용할 데이터베이스 이름
     # - 뒤 옵션들 : 시간대/인코딩/SSL 관련 설정
-    url: jdbc:mysql://localhost:3361/mujakjung?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/mujakjung?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
 
     username: mujakjung      # DB 접속 계정
     password: 1234           # DB 접속 비밀번호

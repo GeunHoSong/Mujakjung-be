@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface MyPageRepository extends JpaRepository<MyPageEntity , Long> {
-    Optional<MyPageEntity> findByMemberId(Long memberId);
+    Optional<MyPageEntity> findByMemberId_Id(Long memberId);
+    Optional<MyPageEntity> findById(Long id);
 }

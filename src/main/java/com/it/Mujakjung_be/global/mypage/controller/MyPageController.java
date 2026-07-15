@@ -20,9 +20,8 @@ public class MyPageController {
         MyPageDto mypage = service.getMypage(id);
         return ResponseEntity.ok(mypage);
     }
-
-    @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateMypage(@PathVariable Long id , @RequestBody MyPageDto dto){
+    @PutMapping("/update/{id}") // {id} 경로 변수를 추가해야 프론트엔드의 /update/13을 받습니다.
+    public ResponseEntity<String> updateMypage(@PathVariable Long id, @RequestBody MyPageDto dto) {
         service.updateMypage(id, dto);
         return ResponseEntity.ok("수정 성공");
     }
