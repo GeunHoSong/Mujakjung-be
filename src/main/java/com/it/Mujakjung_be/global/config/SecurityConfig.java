@@ -46,7 +46,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/api/member/join", "/api/member/login", "/api/health",
                                 "/auth/kakao/**", "/api/travels/**", "/api/search/**", "/api/comment/**",
                                  // [수정] 이 경로를 추가/변경해줘
-                                "/error").permitAll()
+                                "/api/member/display/**","/error").permitAll()
 
                         // 2. [조회] 게시판 및 공지사항 목록 조회는 누구나 가능
                         .requestMatchers(HttpMethod.GET, "/api/board/**", "/api/notice/**").permitAll()

@@ -19,19 +19,19 @@ public class MyPageService {
         return repository.findByMemberId(memberId)
                 .map(entity -> {
                     MyPageDto dto = new MyPageDto();
+                    dto.setId(entity.getId()); // <--- 이 코드를 반드시 추가해야 해!
                     dto.setEmail(entity.getEmail());
                     dto.setNickname(entity.getNickname());
                     dto.setBio(entity.getBio());
                     return dto;
                 })
                 .orElseGet(() -> {
-                    // 마이페이지가 없는 회원을 위해 기본 DTO 반환
                     MyPageDto emptyDto = new MyPageDto();
                     emptyDto.setNickname("닉네임을 설정해주세요");
                     return emptyDto;
                 });
     }
-    @Transactional
+
     public void updateMypage(Long id, MyPageDto dto) {
         // 1. 로그인한 이메일로 엔티티를 찾음
         MyPageEntity m = repository.findById(id)
@@ -41,3 +41,4 @@ public class MyPageService {
         m.update(dto.getNickname(), dto.getBio());
     }
 }
+
