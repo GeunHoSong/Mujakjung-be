@@ -33,12 +33,19 @@ public class MyPageService {
     }
 
     public void updateMypage(Long id, MyPageDto dto) {
-        // 1. 로그인한 이메일로 엔티티를 찾음
+
+        System.out.println("받은 id = " + id);
+
         MyPageEntity m = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("마이페이지가 존재하지 않습니다."));
 
-        // 2. 업데이트
+        System.out.println("찾은 mypage id = " + m.getId());
+
         m.update(dto.getNickname(), dto.getBio());
+
+        repository.saveAndFlush(m);
+
+        System.out.println("저장 완료");
     }
 }
 
