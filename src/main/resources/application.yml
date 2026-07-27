@@ -1,0 +1,43 @@
+# =========================================
+# 🌐 서버 설정
+# =========================================
+server:
+  port: 8080
+
+# =========================================
+# 🌱 Spring 관련 설정 (테스트용 H2 설정 통합)
+# =========================================
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3361/MUJAKJUNG?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: mujakjung
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+# =========================================
+# 🔑 기타 설정 (JWT, OAuth 등)
+# =========================================
+jwt:
+  secret: your-secret-key-your-secret-key-your-secret-key
+  expiration: 3600000
+
+kakao:
+  client-id: e51377400e77cd38bd0ddfdc9c411d60
+  redirect-uri: http://localhost:8080/auth/kakao/callback
+
+naver:
+  client-id: 0mtzJI9Tavpqok3pG5Rw
+  client-secret: T5A3eve1sR
+  redirect-uri: http://localhost:8080/login/oauth2/code/naver
+
+gemini:
+  api-key: "AIzaSyDe0hyTvo8tFkmPtw9GtjfW5C4x3C1LKFE"

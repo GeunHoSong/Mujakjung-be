@@ -1,7 +1,7 @@
-package com.it.Mujakjung_be.global.cart.service;
+package com.it.Mujakjung_be.global.cart.seriver;
 
 import com.it.Mujakjung_be.global.cart.entity.Cart;
-import com.it.Mujakjung_be.global.cart.repository.CartRepository;
+import com.it.Mujakjung_be.global.cart.repoitory.CartRepository;
 import com.it.Mujakjung_be.global.member.entity.MemberEntity;
 import com.it.Mujakjung_be.global.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

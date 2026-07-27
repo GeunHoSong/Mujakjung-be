@@ -3,7 +3,6 @@ package com.it.Mujakjung_be.global.member.entity;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 @Embeddable
 @Getter
 @NoArgsConstructor

@@ -1,4 +1,4 @@
-package com.it.Mujakjung_be.admin;
+package com.it.Mujakjung_be.travel;
 
 import com.it.Mujakjung_be.global.travel.dto.TravelDTO;
 import com.it.Mujakjung_be.global.travel.service.TravelService;
@@ -31,6 +31,6 @@ public class TravelServiceTest {
 
         // 3. 검증 (주석 풀고 제대로 확인해보자!)
         assertThat(result.getId()).isNotNull();
-        System.out.println("✅ 생성된 아이디 번호: " + result.getId());
+        System.out.println(" 생성된 아이디 번호: " + result.getId());
     }
 }

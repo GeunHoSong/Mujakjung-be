@@ -1,5 +1,5 @@
 // CartRepository.java
-package com.it.Mujakjung_be.global.cart.repository;
+package com.it.Mujakjung_be.global.cart.repoitory;
 
 import com.it.Mujakjung_be.global.cart.entity.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;

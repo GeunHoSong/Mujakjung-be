@@ -1,6 +1,7 @@
 package com.it.Mujakjung_be.global.cart.controller;
 
 import com.it.Mujakjung_be.global.cart.dto.CartRequestDto;
+import com.it.Mujakjung_be.global.cart.seriver.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/cart")
 public class CartController {
 
-    private final com.it.Mujakjung_be.global.cart.service.CartService service;
+    private final CartService service;
 
     @PostMapping("/add")
     public ResponseEntity<String> addToCart(@RequestBody CartRequestDto dto){
