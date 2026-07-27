@@ -24,9 +24,10 @@ public class Reservation {
 
     private Long travelId;
 
-    private Long status;
+    private String status;
 
     private String specialRequest; // 요청사항 등
+
 }
 
 
