@@ -1,5 +1,6 @@
 package com.it.Mujakjung_be.global.member.service;
 
+import com.it.Mujakjung_be.global.board.dto.BoardDto;
 import com.it.Mujakjung_be.global.member.dto.*;
 import com.it.Mujakjung_be.global.member.entity.MemberEntity;
 import com.it.Mujakjung_be.global.member.entity.Role;
@@ -104,5 +105,9 @@ public class MemberService {
         List<MemberEntity> members  = repository.findAll();
 
         return members.stream().map(MemberResponse::new).collect(Collectors.toList());
+    }
+
+    public Boolean isNicknameDuplicate(String nickname) {
+        return repository.existsByEmail(nickname);
     }
 }

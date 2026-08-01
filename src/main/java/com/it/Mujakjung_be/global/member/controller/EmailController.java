@@ -23,4 +23,13 @@ public class EmailController {
         service.sendCodeToEmail(email);
         return ResponseEntity.ok("인증 번호가 발송 되었습니다");
     }
+
+    @PostMapping("/verify")
+    public ResponseEntity<Boolean> verifyCode(@RequestBody Map<String , String> request){
+        String email  = request.get("email");
+        String code = request.get("code");
+         boolean isverified = service.verifyCode(email,code);
+
+         return ResponseEntity.ok(isverified);
+    }
 }
