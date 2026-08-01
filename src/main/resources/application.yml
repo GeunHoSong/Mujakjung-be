@@ -5,7 +5,7 @@ server:
   port: 8080
 
 # =========================================
-# 🌱 Spring 관련 설정 (테스트용 H2 설정 통합)
+# 🌱 Spring 관련 설정
 # =========================================
 spring:
   datasource:
@@ -13,6 +13,18 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: mujakjung
     password: 1234
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: songjases@gmail.com
+    password: rvqwyiztsowlqxhh
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
   jpa:
     hibernate:

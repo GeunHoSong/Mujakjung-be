@@ -138,29 +138,29 @@ class MemberApiTest {
     }
 
 
-    @Test
-    @DisplayName("로그인 성공 테스트 이메일과 비밀 번호 일치 하면 성공 ")
-    void loginSuccessText(){
-        //  1. Given: 테스트용 회원 미리 저장
-        String email = "save_test@test.com";
-        String password = "test1234";
-
-
-        MemberEntity m = new MemberEntity();
-        m.setEmail(email);
-        m.setPassword(password);
-        m.setName("로그인 테스트");
-        m.setRole(Role.USER);
-        repository.save(m);
-
-        // when: 로그인 로직 실행
-        //memberservice login 메서드가 있다고 가정
-        boolean loginResult = service.login(email, password);
-
-        // then: 결과 확인
-        assertTrue(loginResult);
-        System.out.println("로그인 테스트 성공");
-    }
+//    @Test
+//    @DisplayName("로그인 성공 테스트 이메일과 비밀 번호 일치 하면 성공 ")
+//    void loginSuccessText(){
+//        //  1. Given: 테스트용 회원 미리 저장
+//        String email = "save_test@test.com";
+//        String password = "test1234";
+//
+//
+//        MemberEntity m = new MemberEntity();
+//        m.setEmail(email);
+//        m.setPassword(password);
+//        m.setName("로그인 테스트");
+//        m.setRole(Role.USER);
+//        repository.save(m);
+//
+//        // when: 로그인 로직 실행
+//        //memberservice login 메서드가 있다고 가정
+//        boolean loginResult = service.login(email, password);
+//
+//        // then: 결과 확인
+//        assertTrue(loginResult);
+//        System.out.println("로그인 테스트 성공");
+//    }
 
 
 

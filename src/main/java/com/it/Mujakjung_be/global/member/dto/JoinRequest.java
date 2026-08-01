@@ -2,6 +2,7 @@ package com.it.Mujakjung_be.global.member.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
@@ -12,7 +13,12 @@ public class JoinRequest {
     @NotBlank(message = "이메일을 필수 입니다")
     private String email;
     // 비밀 번호 방지
-    @NotBlank(message = "비밀 번호 필수 입니다")
+    // 🔒 비밀번호 유효성 검증 정규식 추가
+    @NotBlank(message = "비밀번호는 필수입니다")
+    @Pattern(
+            regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,16}$",
+            message = "비밀번호는 8~16자의 영문, 숫자, 특수문자를 각각 최소 1개 이상 포함해야 합니다."
+    )
     private String password;
     @NotBlank(message = "2차 비밀 번호를 입력을 하세요")
     private String ConfirmPassword;

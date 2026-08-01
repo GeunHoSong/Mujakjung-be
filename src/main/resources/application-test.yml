@@ -4,6 +4,20 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
+
+  # 이 부분이 빠져있다면 추가해 줘야 해!
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: songjases@gmail.com
+    password: rvqwyiztsowlqxhh
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
   jpa:
     hibernate:
       ddl-auto: create-drop
