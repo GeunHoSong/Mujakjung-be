@@ -96,15 +96,11 @@ public class MemberController {
         return ResponseEntity.ok(allMembersForAdmin);
     }
     // 닉네임 중복 확인 api
-    @GetMapping("/check-nicenmae")
-    public ResponseEntity<Boolean> checkNickname(@RequestParam ("nickname") String nickname){
+    @GetMapping("/check-nickname") // 👈 nicenmae -> nickname 오타 수정!
+    public ResponseEntity<Boolean> checkNickname(@RequestParam("nickname") String nickname){
         log.info("닉네임 중복 확인 요청 {} ", nickname);
         boolean is = service.isNicknameDuplicate(nickname);
 
-
-
         return ResponseEntity.ok(is);
-
-
     }
 }

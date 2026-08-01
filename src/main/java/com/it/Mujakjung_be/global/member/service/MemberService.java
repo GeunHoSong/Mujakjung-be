@@ -108,6 +108,9 @@ public class MemberService {
     }
 
     public Boolean isNicknameDuplicate(String nickname) {
-        return repository.existsByEmail(nickname);
+        // ❌ 기존: return repository.existsByEmail(nickname); (이메일로 체크하고 있었음!)
+
+        // O 수정: 닉네임 존재 여부를 확인하는 repository 메서드로 변경
+        return repository.existsByNickname(nickname);
     }
 }
