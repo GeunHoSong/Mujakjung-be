@@ -85,15 +85,6 @@ public class MemberService {
         if (request.getProfileTmgUrl() != null) member.setProfileTmg(request.getProfileTmgUrl());
     }
 
-    // (참고) 이 메서드는 암호화 비교 때문에 무조건 false가 나니 나중에 안 쓰면 지워도 돼!
-    public boolean login(String email , String password){
-        // repository 오타 수정
-        Optional<MemberEntity> member  = repository.findByEmail(email);
-        if(member.isPresent()){
-            return member.get().getPassword().equals(password);
-        }
-        return false;
-    }
 
     public List<MemberResponse> findAllMembersForAdmin() {
         // repository 오타 수정

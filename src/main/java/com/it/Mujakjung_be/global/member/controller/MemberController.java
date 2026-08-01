@@ -95,4 +95,5 @@ public class MemberController {
         List<MemberResponse> allMembersForAdmin = service.findAllMembersForAdmin();
         return ResponseEntity.ok(allMembersForAdmin);
     }
+    // 닉네임 중복 확인 api
 }

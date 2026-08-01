@@ -22,7 +22,7 @@ public class MemberEntity {
     @Id // 기본키(PK) 지정
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // MySQL auto_increment 사용
-    private Long Id;
+    private Long id;
 
     @Column(nullable = false, length = 50)
     //  NOT NULL + VARCHAR(50)
