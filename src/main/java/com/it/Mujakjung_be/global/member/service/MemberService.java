@@ -59,21 +59,6 @@ public class MemberService {
         return new LoginResponse(token, en.getRole().name(), en.getName());
     }
 
-    public MyPageResponse getMyPage(String email) {
-        // repository 오타 수정
-        MemberEntity e = repository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다"));
-
-        MyPageResponse response = new MyPageResponse();
-        response.setEmail(e.getEmail());
-        response.setName(e.getName());
-        response.setPhone(e.getPhone());
-        response.setGender(e.getGender());
-        response.setAddress(e.getAddress());
-        response.setRole(e.getRole().name());
-
-        return response;
-    }
 
     @Transactional
     public void updateProfile(String email, ProfileRequest request){
@@ -108,9 +93,8 @@ public class MemberService {
     }
 
     public Boolean isNicknameDuplicate(String nickname) {
-        // ❌ 기존: return repository.existsByEmail(nickname); (이메일로 체크하고 있었음!)
-
-        // O 수정: 닉네임 존재 여부를 확인하는 repository 메서드로 변경
+        // 닉네임이 존재하면 true이므로, '!'(not)을 붙여서 '중복되지 않았다'는 의미(false)로 리턴하거나
+        // 혹은 컨트롤러와 맞추어 명확하게 처리합니다.
         return repository.existsByNickname(nickname);
     }
 }

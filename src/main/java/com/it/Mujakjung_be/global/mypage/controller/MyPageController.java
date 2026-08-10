@@ -3,6 +3,7 @@ package com.it.Mujakjung_be.global.mypage.controller;
 import com.it.Mujakjung_be.global.mypage.dto.MyPageDto;
 import com.it.Mujakjung_be.global.mypage.entity.MyPageEntity;
 import com.it.Mujakjung_be.global.mypage.service.MyPageService;
+import com.it.Mujakjung_be.global.travel.dto.TravelDTO;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -42,6 +44,11 @@ public class MyPageController {
         // 2. 인증 성공 시 비즈니스 로직 수행
         service.updateMypage(id, dto);
         return ResponseEntity.ok("성공");
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<TravelDTO>> getTravelList(){
+
     }
 
 

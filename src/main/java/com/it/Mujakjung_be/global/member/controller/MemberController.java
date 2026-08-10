@@ -61,19 +61,6 @@ public class MemberController {
         return "테스트 성공";
     }
 
-    /**
-     * 마이페이지 정보 조회 API
-     * POST /api/member/mypage
-     * Authentication: 시큐리티가 검증한 현재 로그인 유저 정보가 담겨 있음
-     */
-    @PostMapping("/mypage")
-    public ResponseEntity<MyPageResponse> mypage(Authentication authentication) {
-        // JWT 필터를 통해 저장된 인증 객체에서 이메일(아이디) 추출
-        String email = authentication.getName();
-
-        // 서비스에서 해당 이메일의 회원 정보를 가져와서 반환
-        return ResponseEntity.ok(service.getMyPage(email));
-    }
 
     /**
      * 프로필 업데이트 API (닉네임, 사진, 자기소개 등)
