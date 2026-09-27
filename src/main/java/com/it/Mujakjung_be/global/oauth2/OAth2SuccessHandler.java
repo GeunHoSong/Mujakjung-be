@@ -1,5 +1,6 @@
 package com.it.Mujakjung_be.global.oauth2;
 
+import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,7 +21,13 @@ public class OAth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+       OAuth2User oAuth2User = (OAuth2User)  authentication.getPrincipal();
+
+        String email = (String) oAuth2User.getAttributes().get("email");
+        String name = (String) oAuth2User.getAttributes().get("name");
+
+        log.info("구글 로그인 성공 이메일: {} , 이름 : {}" , email, name);
+
     }
 }
