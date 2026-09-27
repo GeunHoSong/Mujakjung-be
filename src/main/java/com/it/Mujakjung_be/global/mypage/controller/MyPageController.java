@@ -46,10 +46,15 @@ public class MyPageController {
         return ResponseEntity.ok("성공");
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<TravelDTO>> getTravelList(){
+//    @GetMapping("/list")
+//    public ResponseEntity<List<TravelDTO>> getTravelList(){
+//
+//    }
 
-    }
+
+
+
+
 
 
 

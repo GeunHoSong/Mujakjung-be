@@ -35,6 +35,18 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
 
+  # 🔑 구글 OAuth2 설정 추가
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: "구글에서_발급받은_클라이언트_ID를_여기에_입력"
+            client-secret: "구글에서_발급받은_시크릿을_여기에_입력"
+            scope:
+              - email
+              - profile
+
 # =========================================
 # 🔑 기타 설정 (JWT, OAuth 등)
 # =========================================

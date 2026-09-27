@@ -14,7 +14,9 @@ import java.io.IOException;
  * '인증(Authentication)'되지 않은 사용자가 보호된 API에 접근했을 때 동작을 정의해.
  */
 @Component // 스프링이 이 클래스를 관리하도록 빈(Bean)으로 등록함
-public class UnauthorizedHandler implements AuthenticationEntryPoint {
+public class
+
+   UnauthorizedHandler implements AuthenticationEntryPoint {
 
     /**
      * commence 메서드는 인증 실패 시 자동으로 실행되는 메서드야.
