@@ -1,6 +1,7 @@
 package com.it.Mujakjung_be.global.config;
 
 import com.it.Mujakjung_be.global.member.util.JwtFilter;
+import com.it.Mujakjung_be.global.oauth2.OAth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -28,6 +30,8 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
     private final AccessDeniedHandler accessDeniedHandler;
     private final UnauthorizedHandler unauthorizedHandler;
+    private final OAth2SuccessHandler oAuth2SuccessHandler; // 👈 1. 여기에 성공 핸들러 추가!
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,7 +48,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 1. [공개] 누구나 접근 가능
                         .requestMatchers("/", "/api/member/join", "/api/member/login", "/api/health",
-                                "/auth/kakao/**", "/api/travels/**", "/api/search/**", "/api/comment/**",
+                                "/auth/kakao/**","/oauth2/**", "/api/travels/**", "/api/search/**", "/api/comment/**",
                                  // [수정] 이 경로를 추가/변경해줘
                                 "/api/member/display/**","/error", "/api/email/**","/api/member/check-nickname").permitAll()
 
@@ -68,6 +72,7 @@ public class SecurityConfig {
                 )
                 .formLogin(f -> f.disable())
                 .httpBasic(b -> b.disable())
+                .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2SuccessHandler))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(unauthorizedHandler)
