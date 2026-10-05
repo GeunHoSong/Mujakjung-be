@@ -1,0 +1,21 @@
+### 회원가입
+POST http://127.0.0.1:8080/api/member/join
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "test1234!",
+  "name": "테스트"
+}
+
+### 로그인
+POST http://127.0.0.1:8080/api/member/login
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "test1234!"
+}
+### JWT 태스트
+GET http://127.0.0.1:8080/api/member/test
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzcyNzk0ODYwLCJleHAiOjE3NzI3OTg0NjB9.rD4167EujJlpbbv2ISSIpo67EUA0R-TGCo5MQfN5BP4
