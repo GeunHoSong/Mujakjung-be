@@ -60,7 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/api/member/join", "/api/member/login", "/api/health",
                                 "/auth/kakao/**", "/auth/naver", "/oauth2/**", "/login/**", "/api/travels/**",
                                 "/api/search/**", "/api/comment/**", "/api/member/display/**",
-                                "/error", "/api/email/**", "/api/inquiry", "/api/member/check-nickname",
+                                "/error", "/api/email/**", "/api/inquiry","/api/chat", "/api/member/check-nickname",
                                 "/favicon.ico", "/.well-known/**").permitAll()
 
                         // ② [조회 권한] 게시판 및 공지사항 목록 조회는 비회원도 가능 (GET 요청만 허용)

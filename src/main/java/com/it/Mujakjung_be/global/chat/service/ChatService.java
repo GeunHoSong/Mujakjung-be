@@ -13,15 +13,13 @@ public class ChatService {
     @Value("${gemini.api-key}")
     private String apikey;
 
-    @Value("${gemini.url:https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent}")
+    @Value("${gemini.url:https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent}")
     private String geminiUrl;
 
     // 스프링 부트 내장 RestClient
     private final RestClient restClient = RestClient.create();
 
-    // 1. Controller에서 호출할 수 있도록 public으로 변경
     public String generateResponse(String userPrompt) {
-        // Gemini API 스펙에 맞는 요청 바디 구조 생성
         Map<String, Object> requestBody = Map.of(
                 "contents", List.of(
                         Map.of("parts", List.of(
@@ -30,11 +28,12 @@ public class ChatService {
                 )
         );
 
-        try{
-            // 2. URI에 ?key= 가 들어가도록 등호(=) 추가
+        try {
+            // 💡 URI에는 ?key=를 붙이지 않고, 헤더(x-goog-api-key)로 API Key를 전송
             Map<String, Object> response = restClient.post()
-                    .uri(geminiUrl + "?key=" + apikey)
+                    .uri(geminiUrl)
                     .header("Content-Type", "application/json")
+                    .header("x-goog-api-key", apikey) // 👈 헤더로 API Key 전달
                     .body(requestBody)
                     .retrieve()
                     .body(Map.class);
@@ -52,7 +51,6 @@ public class ChatService {
             return "AI 응답을 받아오지 못했습니다.";
 
         } catch (Exception e) {
-            // 3. 문장 끝에 세미콜론(;) 추가
             throw new RuntimeException("Gemini API 통신 오류 발생 : " + e.getMessage());
         }
     }

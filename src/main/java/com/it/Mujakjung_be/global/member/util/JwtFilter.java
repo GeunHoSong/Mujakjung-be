@@ -15,7 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-@Slf4j // 권한 부여
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
@@ -30,13 +30,14 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String path = request.getRequestURI();
 
-        // [인증 제외 경로] 로그인을 하지 않아도 접근해야 하는 API 및 소셜 로그인/회원가입 경로는 필터 검증 패스
+        // [인증 제외 경로] 로그인을 하지 않아도 접근해야 하는 API, 소셜 로그인/회원가입, 그리고 챗봇 경로는 필터 검증 패스
         if (path.equals("/login")
                 || path.startsWith("/auth/")
                 || path.startsWith("/oauth2/")
                 || path.startsWith("/api/member/login")
                 || path.startsWith("/api/member/join")
-                || path.startsWith("/api/board/")) {
+                || path.startsWith("/api/board/")
+                || path.startsWith("/api/chat")) { // 👈 챗봇 경로 예외 처리 추가 완료!
 
             filterChain.doFilter(request, response);
             return;
@@ -55,7 +56,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     String email = jwtUtil.getEmail(token);
                     UserDetails userDetails = service.loadUserByUsername(email);
 
-                    // 인증 객체를 생성하여 SecurityContext에 저장 (이게 있어야 컨트롤러에서 사용자 정보를 알 수 있음)
+                    // 인증 객체를 생성하여 SecurityContext에 저장
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(auth);
 
@@ -67,7 +68,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 log.error("▶ [JwtFilter] 에러 발생: {}", e.getMessage());
             }
         } else {
-            // [결정적 힌트] 여기서 로그가 뜨면 프론트엔드에서 토큰을 아예 안 보낸 것임!
             log.warn("▶ [JwtFilter] 헤더에 토큰이 없습니다.");
         }
 
