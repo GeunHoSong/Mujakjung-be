@@ -48,7 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/api/member/join", "/api/member/login", "/api/health",
                                 "/auth/kakao/**","/auth/naver", "/oauth2/**", "/login/**", "/api/travels/**",
                                 "/api/search/**", "/api/comment/**", "/api/member/display/**",
-                                "/error", "/api/email/**", "/api/member/check-nickname",
+                                "/error", "/api/email/**","/api/inquiry", "/api/member/check-nickname",
                                 "/favicon.ico", "/.well-known/**").permitAll()
 
                         // 2. [조회] 게시판 및 공지사항 목록 조회는 누구나 가능
