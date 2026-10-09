@@ -46,4 +46,10 @@ public class TravelController {
         TravelAIResponseDto responseDto = travelAiService.getRecommendation(requestDto);
         return ResponseEntity.ok(responseDto);
     }
+    // [일반유저 / 관리자] 여행 일정 삭제 (주소: /api/travels/{id})
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTravel(@PathVariable Long id) {
+        service.deleteTravel(id);
+        return ResponseEntity.ok().build();
+    }
 }

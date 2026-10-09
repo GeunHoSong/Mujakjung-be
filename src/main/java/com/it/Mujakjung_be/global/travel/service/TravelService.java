@@ -95,5 +95,12 @@ public class TravelService {
 
         return TravelDTO.fromEntity(travel);
     }
+    @org.springframework.transaction.annotation.Transactional
+    public void deleteTravel(Long id){
+        if(!repository.existsById(id)){
+            throw new RuntimeException("삭제할 여행 일정을 찾을 수 없습니다"  + id);
+        }
+        repository.deleteById(id);
+    }
 }
 
