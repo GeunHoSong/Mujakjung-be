@@ -52,4 +52,6 @@ public class TravelController {
         service.deleteTravel(id);
         return ResponseEntity.ok().build();
     }
+
+
 }
