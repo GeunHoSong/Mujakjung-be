@@ -35,4 +35,8 @@ public class JoinRequest {
     private String zipcode;
     private String address;
     private String detailAddress;
+
+    private boolean locationAgreed;
+    private boolean thirdPartyAgreed;
 }
+

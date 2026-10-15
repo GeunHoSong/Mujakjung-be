@@ -26,7 +26,7 @@ public class MyPageController {
 
     // 1. 마이페이지 정보 조회
     @PostMapping("/mypage")
-    public ResponseEntity<?> getMyPage(@RequestHeader(value = "Authorization", required = false) String tokenHeader){
+    public ResponseEntity<?> MyPage(@RequestHeader(value = "Authorization", required = false) String tokenHeader){
         if(tokenHeader == null || !tokenHeader.startsWith(("Bearer"))){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 없습니다");
 
@@ -34,7 +34,8 @@ public class MyPageController {
         String token = tokenHeader.substring(7);
         String email  = util.getEmail(token);
 
-        MyPageDto dto  = myPageService.getMyPageByEmail(email);
+        MyPageDto dto  = myPageService.getMyPage(email);
+
 
         return ResponseEntity.ok(dto);
     }

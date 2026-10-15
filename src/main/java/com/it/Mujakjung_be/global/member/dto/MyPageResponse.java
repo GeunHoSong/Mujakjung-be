@@ -1,9 +1,14 @@
 package com.it.Mujakjung_be.global.member.dto;
 
 import com.it.Mujakjung_be.global.member.entity.Address;
-import lombok.Data;
+import lombok.*;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class MyPageResponse {
     private String email;
     private String name;
@@ -11,4 +16,5 @@ public class MyPageResponse {
     private String gender;
     private Address address;
     private String role;
+
 }

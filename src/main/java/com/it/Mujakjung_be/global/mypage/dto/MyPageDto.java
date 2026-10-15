@@ -1,7 +1,11 @@
 package com.it.Mujakjung_be.global.mypage.dto;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class MyPageDto {
     private Long id;
     private String email;

@@ -25,7 +25,6 @@ public class MemberService {
     private final JwtUtil jwtUtil;
 
     public void save(JoinRequest request, MultipartFile profileImage){
-        // repository 오타 수정
         if (repository.existsByEmail(request.getEmail())){
             throw new IllegalArgumentException("이미 가입된 이메일 입니다");
         }
@@ -36,13 +35,24 @@ public class MemberService {
         member.setName(request.getName());
         member.setPhone(request.getPhone());
         member.setGender(request.getGender());
+        member.setNickname(request.getNickname());
+
+        // 만약 MemberEntity에 setZipcode 나 별도의 주소 필드 세터가 있다면 아래처럼 각각 세팅해주세요.
+        // 혹은 Address 객체 생성자가 따로 있다면 그에 맞추어 넣어주면 됩니다.
+        // 예시:
+        // member.setZipcode(request.getZipcode());
+        // member.setAddress(request.getAddress());
+        // member.setDetailAddress(request.getDetailAddress());
+
         member.setRole(Role.USER);
+        member.setLocationAgreed(request.isLocationAgreed());
+        member.setThirdPartyAgreed(request.isThirdPartyAgreed());
+
         if (profileImage != null && !profileImage.isEmpty() ){
             String originFileName  = profileImage.getOriginalFilename();
             member.setProfileTmg(originFileName);
         }
 
-        // repository 오타 수정
         repository.save(member);
     }
 

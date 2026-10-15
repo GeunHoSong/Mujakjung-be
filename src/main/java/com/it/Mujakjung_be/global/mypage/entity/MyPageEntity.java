@@ -1,16 +1,16 @@
 package com.it.Mujakjung_be.global.mypage.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import com.it.Mujakjung_be.global.member.entity.MemberEntity;
 
 @Entity
 @Getter
 @Table(name = "mypage")
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class MyPageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

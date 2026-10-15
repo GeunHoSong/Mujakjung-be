@@ -52,13 +52,25 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             throw new OAuth2AuthenticationException("OAuth2 로그인 실패: 이메일 정보를 찾을 수 없습니다.");
         }
 
-        // DB에 자동 회원가입(Upsert) 진행
+        // DB에 자동 회원가입(Upsert) 및 권한 설정 진행
         String finalName = (name != null) ? name : "소셜유저";
-        MemberEntity member = repository.findByEmail(email).orElseGet(() -> {
+
+        // 지정된 관리자 이메일 조건 설정
+        Role targetRole = "jigu1993@naver.com".equals(email) ? Role.ADMIN : Role.USER;
+
+        MemberEntity member = repository.findByEmail(email).map(existingMember -> {
+            // 기존 회원인데 지정된 관리자 이메일이고 권한이 ADMIN이 아니라면 ADMIN으로 업데이트
+            if ("jigu1993@naver.com".equals(email) && existingMember.getRole() != Role.ADMIN) {
+                existingMember.setRole(Role.ADMIN);
+                return repository.save(existingMember);
+            }
+            return existingMember;
+        }).orElseGet(() -> {
+            // 신규 가입 시
             MemberEntity newMember = new MemberEntity();
             newMember.setEmail(email);
             newMember.setName(finalName);
-            newMember.setRole(Role.USER);
+            newMember.setRole(targetRole);
             newMember.setPassword("SOCIAL_LOGIN_USER");
             return repository.save(newMember);
         });

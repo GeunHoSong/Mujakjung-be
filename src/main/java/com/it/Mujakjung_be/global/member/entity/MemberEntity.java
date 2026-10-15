@@ -51,7 +51,13 @@ public class MemberEntity {
     @Column(name = "reg-date", updatable = false)
     private LocalDateTime regDate;
 
-    public MemberEntity (String email, String password, String name, String phone, String gender, Address address, Role role  ,String nickname, String profileTmg, String bio , LocalDateTime regDate ){
+    @Column(nullable = false)
+    private boolean locationAgreed;
+
+    @Column(nullable = false)
+    private boolean thirdPartyAgreed;
+
+    public MemberEntity (String email, String password, String name, String phone, String gender, Address address, Role role  ,String nickname, String profileTmg, String bio , LocalDateTime regDate, boolean locationAgreed, boolean thirdPartyAgreed ){
         this.email = email;
         this.password = password;
         this.name = name;
@@ -63,6 +69,8 @@ public class MemberEntity {
         this.profileTmg=  profileTmg;
         this.bio = bio;
         this.regDate = regDate;
+        this.locationAgreed = locationAgreed;
+        this.thirdPartyAgreed = thirdPartyAgreed;
     }
 
 
