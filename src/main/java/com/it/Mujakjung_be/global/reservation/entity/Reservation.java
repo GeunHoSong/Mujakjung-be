@@ -22,11 +22,11 @@ public class Reservation {
     // 어떤 여행지/상품을 예약했는지 (Travel 등과 연관관계 매핑 필요시 추가)
 
 
-    private Long travelId;
-
+    private String productName;
+    private String departureDate;
+    private int headCount;
+    private String memo;
     private String status;
-
-    private String specialRequest; // 요청사항 등
 
 }
 

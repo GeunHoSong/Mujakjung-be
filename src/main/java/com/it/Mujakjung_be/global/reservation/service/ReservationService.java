@@ -10,21 +10,22 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReservationService {
 
-    private ReservationRepository repository;
+    private final ReservationRepository repository;
 
 
     public Long registerReservation(ReservationDto dto) {
         Reservation reservation = new Reservation();
 
-        reservation.setTravelId(dto.getTravelId());
-        reservation.setStatus("PENDING");
-        reservation.setSpecialRequest(dto.getSpecialRequest());
+        reservation.setProductName(dto.getProductName());
+        reservation.setDepartureDate(dto.getDepartureDate());
+        reservation.setHeadCount(dto.getHeadCount());
+        reservation.setMemo(dto.getMemo());
+        reservation.setStatus(dto.getStatus() != null ? dto.getStatus() : "PENDING");
 
-        Reservation save = repository.save(reservation);
+        // reservation이 아니라 repository로 save 호출!
+        Reservation saved = repository.save(reservation);
 
-        return  save.getId();
-
-
+        return saved.getId();
     }
 
 }

@@ -15,7 +15,7 @@ public class BookmarkEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String email;
+    private Long  memberId;
 
     @Column(nullable = false)
     private String placeName;

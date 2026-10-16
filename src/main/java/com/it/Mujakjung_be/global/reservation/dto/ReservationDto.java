@@ -8,7 +8,11 @@ import lombok.Setter;
 
 public class ReservationDto {
     private Long id;
-    private Long travelId;
+    private String productName;
+    private String departureDate; // 프론트엔드와 이름 맞춤
+    private int headCount;
+    private String memo;
     private String status;
-    private String specialRequest;
+
+
 }

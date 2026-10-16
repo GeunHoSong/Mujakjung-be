@@ -7,17 +7,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/reservation")
+@RequestMapping("/api/reservations")
 @RequiredArgsConstructor
 @CrossOrigin("*")
 public class ReservationController {
 
-    private ReservationService service;
+    private  final ReservationService service;
 
 
-    @GetMapping
+
+    @PostMapping // 생성은 PostMapping
     public ResponseEntity<Long> createReservation(@RequestBody ReservationDto dto) {
-        Long l = service.registerReservation(dto);
-        return ResponseEntity.ok(l);
+        Long reservationId = service.registerReservation(dto);
+        return ResponseEntity.ok(reservationId);
     }
 }
