@@ -47,4 +47,12 @@ public class AdminTravelController {
     public ResponseEntity<List<TravelDTO>> list() {
         return ResponseEntity.ok(travelService.getAllTravels());
     }
+
+    // 관리자 전용: 상담사 권한 부여
+    @PatchMapping("/member/{memberId}/agent")
+    public ResponseEntity<String> assignAgent(@PathVariable Long memberId){
+        memberService.assignAgentRole(memberId);
+        return ResponseEntity.ok("상담사 권한을 부여 합니다");
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.it.Mujakjung_be.global.member.service;
 
-import com.it.Mujakjung_be.global.board.dto.BoardDto;
+
 import com.it.Mujakjung_be.global.member.dto.*;
 import com.it.Mujakjung_be.global.member.entity.MemberEntity;
 import com.it.Mujakjung_be.global.member.entity.Role;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Optional;
@@ -106,5 +107,14 @@ public class MemberService {
         // 닉네임이 존재하면 true이므로, '!'(not)을 붙여서 '중복되지 않았다'는 의미(false)로 리턴하거나
         // 혹은 컨트롤러와 맞추어 명확하게 처리합니다.
         return repository.existsByNickname(nickname);
+    }
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @Transactional
+    public void assignAgentRole(Long memberId) {
+        MemberEntity entity = repository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다"));
+        if(entity.getRole() == Role.ADMIN){
+            throw  new IllegalArgumentException("관리자 계정으로 상담사로 변경할 수 없습니다");
+        }
+        entity.setRole(Role.AGENT);
     }
 }

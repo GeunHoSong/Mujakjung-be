@@ -76,8 +76,8 @@ jwt:
 kakao:
   client-id: ${KAKAO_CLIENT_ID}
   redirect-uri: http://localhost:8080/auth/kakao/callback
+# FastAPI 서버 연결 설정
+# FastAPI 서버 연결 설정
+fastapi:
+  url: http://127.0.0.1:8001
 
-gemini:
-  api:
-    key: ${GEMINI_API_KEY}
-  url: https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent
