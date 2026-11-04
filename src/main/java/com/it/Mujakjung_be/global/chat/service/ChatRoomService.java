@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ChatRoomService {
@@ -24,6 +26,21 @@ public class ChatRoomService {
     @Transactional(readOnly = true)
     public ChatRoom findRoom(Long roomId){
         return repository.findById(roomId).orElseThrow(()-> new IllegalArgumentException("상담방을 찾을 수 없습니다"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<ChatRoom> findWaitingRooms(){
+        return repository.findByStatus("WAITING");
+    }
+
+    // ④ 상담사가 상담 요청 수락
+    @Transactional
+    public ChatRoom acceptRoom(Long roomId, String agentEmail){
+        int updated = repository.acceptRoom(roomId, agentEmail);
+        if(updated == 0){
+            throw  new IllegalArgumentException("이미 수락을 되었거나 존재 하지 않는 상담방입니다");
+        }
+        return  repository.findById(roomId).orElseThrow(()-> new IllegalArgumentException("상담방을 찾을 수 없습니다"));
     }
 }
 

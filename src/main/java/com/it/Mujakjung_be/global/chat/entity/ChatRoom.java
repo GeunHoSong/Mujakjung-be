@@ -12,9 +12,11 @@ public class ChatRoom {
     // 상담방 고유 번호
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long roomId;
     // 상담을 요청한 회원 이메일
     @Column(nullable = false)
+
     private String memberEmail;
 
     // 담당 상담사 이메일

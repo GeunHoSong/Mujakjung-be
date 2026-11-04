@@ -22,7 +22,7 @@ public class ChatRoomController {
     public ResponseEntity<String> createRoom(Authentication auth){
         String email = auth.getName();
         ChatRoom room = service.createRoom(email);
-       return  ResponseEntity.ok("상담방 생성");
+       return  ResponseEntity.ok("상담방 생성" + room.getRoomId());
     }
 
 }
