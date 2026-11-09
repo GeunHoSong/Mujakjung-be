@@ -66,8 +66,8 @@ public class MemberController {
      * 프로필 업데이트 API (닉네임, 사진, 자기소개 등)
      * POST /api/member/proflie
      */
-    @PostMapping("/proflie")
-    public ResponseEntity<String> updateProfile(Authentication authentication, @RequestBody ProfileRequest request){
+    @PutMapping(value = "/profile" , consumes = "multipart/form-data")
+    public ResponseEntity<String> updateProfile(Authentication authentication,@ModelAttribute ProfileRequest request){
         // 로그인된 사용자 이메일 가져오기
         String email = authentication.getName();
         log.info("프로필 업데이트 요청 계정: {}", email);

@@ -80,6 +80,7 @@ public class MemberService {
         if (request.getNickname() != null) member.setNickname(request.getNickname());
         if (request.getBio() != null) member.setBio(request.getBio());
         if (request.getProfileTmgUrl() != null) member.setProfileTmg(request.getProfileTmgUrl());
+
     }
 
 
