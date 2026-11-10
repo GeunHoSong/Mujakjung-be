@@ -36,7 +36,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 || path.startsWith("/oauth2/")
                 || path.startsWith("/api/member/login")
                 || path.startsWith("/api/member/join")
-                || path.startsWith("/api/board/")
                 || path.equals("/api/chat")) { // 👈 챗봇 경로 예외 처리 추가 완료!
 
             filterChain.doFilter(request, response);

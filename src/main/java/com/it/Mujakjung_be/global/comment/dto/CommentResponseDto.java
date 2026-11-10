@@ -17,7 +17,9 @@ public class CommentResponseDto {
         this.id = comment.getId();
         this.content = comment.getContent();
         this.regDate = comment.getRegDate();
-        this.writer = comment.getMember().getNickname(); // 필요한 정보만 추출
+        this.writer = comment.getMember() != null
+                ? comment.getMember().getNickname()
+                : "작성자 정보 없음";
     }
 
 }

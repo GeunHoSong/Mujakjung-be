@@ -36,4 +36,12 @@ public class CommentEntity {
     public void prePersist() {
         this.regDate = LocalDateTime.now();
     }
+
+    public void setMemeber(MemberEntity member){
+        this.member = member;
+    }
+
+    public void updataContent(String content) {
+        this.content = content;
+    }
 }
